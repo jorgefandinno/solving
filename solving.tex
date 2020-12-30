@@ -1,0 +1,1266 @@
+%------------------------------------------------------------
+\lecture{Conflict-driven ASP Solving}{solving}
+%------------------------------------------------------------
+\part{Conflict-driven ASP Solving}
+%------------------------------------------------------------
+\newcommand{\clno}[1]{\ensuremath{\delta(#1)}}
+\newcommand{\ClNo}[1]{\ensuremath{\Delta(#1)}}
+\newcommand{\nocl}[1]{\ensuremath{\gamma(#1)}}
+\newcommand{\NoCl}[1]{\ensuremath{\Gamma(#1)}}
+\newcommand{\sigmaAUX}{\rho}%{\sigma}
+%\newcommand{\sigmaUIP}{\sigma}%{\sigma_{\scriptscriptstyle\!\mathit{UIP}}}
+%------------------------------------------------------------
+\section{Motivation}
+%------------------------------------------------------------
+\begin{frame}{Motivation}
+  \begin{itemize}
+  \item<1->\structure{Goal} Approach to computing stable models of logic programs,
+
+    based on concepts from
+    \begin{itemize}
+    \item Constraint Processing (CP) and
+    \item Satisfiability Testing (SAT)
+    \end{itemize}
+
+  \item<1->\structure{Idea} View inferences in ASP as unit propagation on nogoods
+
+  \item<1->\structure{Benefits} \
+    \begin{itemize}
+    \item A uniform constraint-based framework for different\\ kinds of
+      inferences in ASP
+    \item Advanced techniques from the areas of CP and SAT
+    \item Highly competitive implementation
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+%------------------------------------------------------------
+\section{Boolean constraints}
+%------------------------------------------------------------
+\begin{frame}{Assignments}
+  \begin{itemize}
+  \item<1-> An \alert{assignment} \ass\ over $\domain{\ass}=\atom{P}\cup\body{P}$
+    is a sequence
+    \[
+    (\sigma_1,\ldots,\sigma_n)
+    \]
+    of \alert{signed literals}
+    $\sigma_i$ of form \alert{$\Tsigned{v}$} or \alert{$\Fsigned{v}$} for
+    $v\in\domain{\ass}$ and $1 \leq i \leq n$
+  \item<1,7> $\Tsigned{v}$ expresses that $v$ is \emph{true} and $\Fsigned{v}$ that it is \emph{false}
+  \item<2,7> The complement, $\overline{\sigma}$, of a literal $\sigma$ is defined as
+    $\overline{\Tsigned{v}} = \Fsigned{v}$ and $\overline{\Fsigned{v}} = \Tsigned{v}$
+  \item<3,7> $\ass\circ\sigma$ stands for the result of appending $\sigma$ to \ass
+  \item<4,7> Given $\ass=(\sigma_1,\ldots,\sigma_{k-1},\sigma_k,\dots,\sigma_n)$,
+        we let $\ass[\sigma_k]=(\sigma_1,\ldots,\sigma_{k-1})$
+  \item<5,6,7> We sometimes identify an assignment with the set of its literals
+  \item<6,7>
+    Given this,
+    we access \emph{true} and \emph{false} propositions in \ass\ via
+    \[
+    \tlits{\ass}
+    =
+    \{v \in \domain{\ass} \mid \Tsigned{v} \in\ass\}
+    \text{ and }
+    \flits{\ass}
+    =
+    \{v \in \domain{\ass} \mid \Fsigned{v} \in\ass\}
+    \]
+  \end{itemize}
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}{Nogoods, solutions, and unit propagation}
+  \begin{itemize}
+  \item A \alert{nogood} is a set $\{\sigma_1,\ldots,\sigma_n\}$ of
+    signed literals,
+
+    expressing a \alert{constraint} violated by any assignment
+    \\
+    containing $\sigma_1,\ldots,\sigma_n$
+  \item<2-> An assignment \ass\ such that
+    \(
+    \tlits{\ass} \cup \flits{\ass}
+    =
+    \domain{\ass}
+    \)
+    and
+    \(
+    \tlits{\ass} \cap \flits{\ass}
+    =
+    \emptyset
+    \)
+
+    is a \alert{solution} for a set~$\Delta$ of nogoods,
+    if
+    $\delta\not\subseteq\ass$ for all $\delta\in\Delta$
+  \item<3-> For a nogood $\delta$, a literal $\sigma\in\delta$, and an assignment \ass,
+    we say that\\
+    \alert{$\overline{\sigma}$} is \alert{unit-resulting} for~$\delta$ wrt \ass,
+    if
+    \begin{enumerate}
+    \item $\delta\setminus\ass=\{\sigma\}$
+      and
+    \item $\overline{\sigma}\not\in\ass$
+    \end{enumerate}
+  \item<4-> For a set $\Delta$ of nogoods and an assignment~\ass,
+    \alert{unit propagation} is the iterated process of extending \ass\ with
+    unit-resulting literals until no further literal is unit-resulting for any
+    nogood in $\Delta$
+  \end{itemize}
+\end{frame}
+%------------------------------------------------------------
+\section{Nogoods from logic programs}
+%------------------------------------------------------------
+\subsection{Nogoods from program completion}
+%------------------------------------------------------------
+\begin{frame}[c]{Nogoods from logic programs\\[-1ex]\normalsize via program completion}
+
+The completion of a logic program $P$ can be defined as follows:
+%
+\begin{eqnarray*}
+  &&
+  \{
+  v_B \leftrightarrow
+  a_1          \wedge \dots \wedge a_m      \wedge
+  \neg a_{m+1} \wedge \dots \wedge \neg a_n \mid
+  \\&&\qquad\quad
+  B \in\body{P} \text{ and }
+  B = \{a_1,\dots,a_m,\naf{a_{m+1}},\dots,\naf{a_n}\}
+  \}
+  \\[6pt]
+  &\cup&
+  \{
+  a \leftrightarrow
+  v_{B_1} \vee \dots \vee v_{B_k}
+  \mid
+  \\&&\qquad\quad
+  a\in\atom{P} \text{ and }
+  \atbody{P}{a} = \{B_1,\dots,B_k\}
+  \}\ ,
+\end{eqnarray*}
+%
+where $\atbody{P}{a}=\{\body{r}\mid r\in P\text{ and }\head{r}=a\}$
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}{Nogoods from logic programs\\[-1ex]\normalsize via program completion}
+
+  \begin{itemize}
+%  \item<1-> Let $B=\{a_1,\dots,a_m,\naf{a_{m+1}},\dots,\naf{a_n}\}$ be a body
+  \item<1-> The (body-oriented) equivalence
+    \[
+    v_B \leftrightarrow
+         a_1     \wedge\dots\wedge      a_m \wedge
+    \neg a_{m+1} \wedge\dots\wedge \neg a_n
+    \]
+    can be decomposed into two implications:
+    \medskip
+    \begin{enumerate}
+    \item<only@2>\normalsize
+      \alert{%
+      \(
+      v_B \to
+           a_1     \wedge\dots\wedge      a_m \wedge
+      \neg a_{m+1} \wedge\dots\wedge \neg a_n
+      \)}
+
+      \smallskip
+      is equivalent to the conjunction of
+      \[
+      \neg v_B \vee  a_1
+      ,\ \dots,\
+      \neg v_B \vee  a_m
+      ,\
+      \neg v_B \vee  \neg a_{m+1}
+      ,\ \dots,\
+      % \text{ and }
+      \neg v_B \vee  \neg a_n
+      \]
+      and induces the set of nogoods
+      \alert{\small%
+        \[
+        \ClNo{B}
+        =
+        \{\,\{\Tsigned{B},\Fsigned{a_1}\},
+        \dots,
+        \{\Tsigned{B},\Fsigned{a_m}\},
+        \{\Tsigned{B},\Tsigned{a_{m+1}}\},
+        \dots,
+        \{\Tsigned{B},\Tsigned{a_n}\}\,\}
+        \]
+      }
+    \item<only@3->\normalsize
+      \alert{%
+      \(
+      a_1          \wedge \dots \wedge a_m      \wedge
+      \neg a_{m+1} \wedge \dots \wedge \neg a_n
+      \rightarrow v_B
+      \)}
+
+      \smallskip
+      gives rise to the nogood
+      \[
+      \clno{B}
+      =
+      \alert{\{\Fsigned{B},\Tsigned{a_1},\dots,\Tsigned{a_m},\Fsigned{a_{m+1}},\dots,\Fsigned{a_n}\}}
+      \]
+      \bigskip
+  \end{enumerate}
+\end{itemize}
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}{Nogoods from logic programs\\[-1ex]\normalsize via program completion}
+
+  \begin{itemize}
+  \item Analogously, the (atom-oriented) equivalence
+    \[
+    a \leftrightarrow v_{B_1} \vee \dots \vee v_{B_k}
+    \]
+    yields the nogoods
+    \begin{enumerate}
+    \item []
+    \item
+      \(
+      \ClNo{a} = \{\,\{\Fsigned{a},\Tsigned{B_1}\},\dots,\{\Fsigned{a},\Tsigned{B_k}\}\,\}
+      \)
+      and
+    \item []
+    \item
+      \(
+      \clno{a} = \{\Tsigned{a},\Fsigned{B_1},\dots,\Fsigned{B_k}\}
+      \)
+    \item []
+    \end{enumerate}
+%  \item [] where $\body{a}=\{B_1,\dots,B_k\}$ dor an atom $a\in\atom{P}$
+  \end{itemize}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{Nogoods from logic programs\\[-1ex]\normalsize atom-oriented nogoods}
+  \begin{itemize}
+  \item<1> For an atom $a$ where $\atbody{P}{a}=\{B_1,\dots,B_k\}$,
+    we get
+    \[
+    \{\Tsigned{a},\Fsigned{B_1},\dots,\Fsigned{B_k}\}
+    \quad\text{and}\quad
+    \{\,\{\Fsigned{a},\Tsigned{B_1}\},\dots,\{\Fsigned{a},\Tsigned{B_k}\}\,\}
+    \]
+  \item<2-> \structure{Example}
+    Given Atom~$x$ with $\body{x}=\{\{y\},\{\naf{z}\}\}$, we obtain
+    \arrayrulewidth=.3pt
+    \[
+    \begin{array}{|rcl|}
+      \hline
+      \only<9>{\color{red}}\only<13-14>{\color{green}}x&\leftarrow&\only<8-9,13-14>{\color{red}}y\\
+      \only<9>{\color{red}}\only<13-14>{\color{green}}x&\leftarrow&\only<8-9>{\color{red}}\only<14>{\color{green}}\naf{z}\\
+      \hline
+    \end{array}
+    \qquad\qquad
+    \begin{array}{p{5pt}l}
+      &\alert<4>{\{\Tsigned{x},\Fsigned{\{y\}},\Fsigned{\{\naf{z}\}}\}}
+      \\[2pt]
+      &\{\,\{\Fsigned{x},\Tsigned{\{y\}}\},\{\Fsigned{x},\Tsigned{\{\naf{z}\}}\}\,\}
+    \end{array}
+    \]
+  \item<3-> [] For \alert<4>{nogood}
+    \(
+    \alert<4>{\{
+      \Tsigned{\only<6-7,11-12>{\color{green}}x},
+      \Fsigned{\only<6-7,11-12>{\color{red}}\{y\}},
+      \Fsigned{\only<6-7,11-12>{\color{red}}\{\naf{z}\}}
+      \}},
+    \)
+    the signed literal
+    \begin{itemize}
+    \item<5-9> \Fsigned{\only<7,9>{\color{red}}x} is unit-resulting  wrt \alert<5>{assignment}
+      \(
+      (\Fsigned{\only<5-9>{\color{red}}{\{y\}}},\Fsigned{\only<5-9>{\color{red}}\{\naf{z}\}})
+      \)
+      and
+    \item<10-> \Tsigned{\only<12,14>{\color{green}}\{\naf{z}\}} is unit-resulting  wrt assignment
+      \(
+      (\Tsigned{\only<10-14>{\color{green}}x},\Fsigned{\only<10-14>{\color{red}}\{y\}})
+      \)
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}{Nogoods from logic programs\\[-1ex]\normalsize body-oriented nogoods}
+  \begin{itemize}
+  \item <1> For a body $B=\{a_1,\dots,a_m,\naf{a_{m+1}},\dots,\naf{a_n}\}$, %\pause,
+    we get
+    \vspace{-2pt}
+    \[
+    \begin{array}{l}
+      \{\Fsigned{B},\Tsigned{a_1},\dots,\Tsigned{a_m},\Fsigned{a_{m+1}},\dots,\Fsigned{a_n}\}
+      \\[2pt]
+      \{\,
+      \{\Tsigned{B},\Fsigned{a_1}\},
+      \dots,
+      \{\Tsigned{B},\Fsigned{a_m}\},
+      \{\Tsigned{B},\Tsigned{a_{m+1}}\},
+      \dots,
+      \{\Tsigned{B},\Tsigned{a_n}\}
+      \,\}
+    \end{array}
+  \]
+  \item<2-> \structure{Example}
+    Given Body~$\{x,\naf{y}\}$, we obtain
+    \arrayrulewidth=.3pt
+    \[
+    \begin{array}{@{}|r@{}l|}
+      \hline
+      \ldots\leftarrow{}&x,\naf{y}\\[-1.2ex]
+      &\quad\vdots\\[-3pt]
+      \ldots\leftarrow{}&x,\naf{y}\\
+      \hline
+    \end{array}
+    \quad\quad
+    \begin{array}{p{5pt}l}
+      &\{\Fsigned{\{x,\naf{y}\}},\Tsigned{x},\Fsigned{y}\}
+      \\[2pt]
+      &\{\,\{\Tsigned{\{x,\naf{y}\}},\Fsigned{x}\},\{\Tsigned{\{x,\naf{y}\}},\Tsigned{y}\}\,\}
+    \end{array}
+    \]
+  \item<3-> []
+    For nogood $\clno{\{x,\naf{y}\}}=\{\Fsigned{\{x,\naf{y}\}},\Tsigned{x},\Fsigned{y}\}$,
+    the signed literal
+    \begin{itemize}
+    \item \Tsigned{\{x,\naf{y}\}} is unit-resulting  wrt assignment $(\Tsigned{x},\Fsigned{y})$
+      and
+    \item \Tsigned{y}                    is unit-resulting  wrt assignment $(\Fsigned{\{x,\naf{y}\}},\Tsigned{x})$
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}{Characterization of stable models\\\normalsize
+  for \alert<3>{tight} logic programs\only<3>{, ie.\ \alert{free of positive recursion}}}
+\bigskip
+Let $P$ be a logic program and
+\[
+\begin{array}{lcr@{}c@{}l}
+\Delta_P
+& = &
+% \phantom{\cup\ }
+\{\clno{a} \mid a\in\atom{P}\}
+& {} \cup {} &
+\{\delta\in\ClNo{a} \mid a\in\atom{P}\}
+\\[2pt]
+& \cup &
+\{\clno{B} \mid B\in\body{P}\}
+& {} \cup {} &
+\{\delta\in\ClNo{B}\mid B\in\body{P}\}
+\end{array}
+\]
+\bigskip
+\pause
+\begin{theorem}
+Let $P$ be a \alert{tight} logic program. Then,
+
+\qquad $X\subseteq\atom{P}$ is a stable model of~$P$ \alert{iff}
+
+\qquad $X=\tlits{\ass}\cap\atom{P}$ for a (unique) solution \ass\ for $\Delta_P$
+\end{theorem}
+% \pause
+% \begin{itemize}
+% \item [\ithand] The set $\Delta_P$ of nogoods captures inferences from
+% \\  (program $P$ and) program completion
+% \end{itemize}
+\end{frame}
+% %----------------------------------------------------------------
+% \begin{frame}{Atom-oriented nogoods and tableau rules}
+
+% \begin{itemize}
+% \item Tableau rules FTA, BFA, FFA, and BTA are atom-oriented
+% \pause
+% \item
+%   For an atom $a$ such that $\body{a}=\{B_1,\dots,B_k\}$,\\ consider the equivalence:
+%   \qquad
+%   \(
+%   a \leftrightarrow v_{B_1} \vee \dots \vee v_{B_k}
+%   \)
+%   \\\mbox{~}
+% \pause
+% \item Inferences from nogoods \
+%   \(
+%   \ClNo{a}
+%   =
+%   \{\,\{\Fsigned{a},\Tsigned{B_1}\},\dots,\{\Fsigned{a},\Tsigned{B_k}\}\,\}
+%   \)\\
+%   correspond to those from tableau rules \alert{FTA} and \alert{BFA}:
+% \[
+% \begin{array}{c}
+% a \leftarrow B \\
+% \Tsigned{B} \\\hline
+% \Tsigned{a}
+% \end{array}
+% \qquad\qquad%\qquad
+% \begin{array}{c}
+% a \leftarrow B \\
+% \Fsigned{a} \\\hline
+% \Fsigned{B}
+% \end{array}
+% \]
+% % \pause
+% %   \begin{description}
+% %   \item [FTA:]
+% %     \(
+% %     (v_{B_1} \vee \dots \vee v_{B_m}) \rightarrow a
+% %     \)
+% %   \item[BFA:]
+% %     \(
+% %     \neg{a} \rightarrow (\neg{v_{B_1}} \wedge \dots \wedge \neg{v_{B_m}})
+% %     \)
+% %   \end{description}
+% %   both being equivalent to
+% %   \(
+% %   (\neg{v_{B_1}} \vee a) \wedge \dots \wedge (\neg{v_{B_m}} \vee a)
+% %   \)
+% %\newslide\mbox{}\bigskip
+% % \newpage
+% \pause
+% \item Inferences from nogood
+%   \(
+%   \clno{a}
+%   =
+%   \{\Tsigned{a},\Fsigned{B_1},\dots,\Fsigned{B_k}\}
+%   \)\\
+%   correspond to those from tableau rules \alert{FFA} and \alert{BTA}:
+% \[
+% \begin{array}[b]{c}
+% \Fsigned{B_1},\dots,\Fsigned{B_k} % &
+% % \raisebox{-8pt}[0pt][0pt]{($\body{a} = \{B_1,\dots,B_k\}$)}
+% \\\hline%{1-1}
+% \Fsigned{a}
+% \end{array}
+% \qquad\qquad%\qquad
+% \begin{array}[b]{c}
+% \Tsigned{a} \\
+% \Fsigned{B_1},\dots,\Fsigned{B_{i-1}},\Fsigned{B_{i+1}},\dots,\Fsigned{B_k} % &
+% % \raisebox{-8pt}[0pt][0pt]{($\body{a} = \{B_1,\dots,B_k\}$)}
+% \\\hline%{1-1}
+% \Tsigned{B_i}
+% \end{array}
+% \]
+% % \begin{description}
+% % \item[FFA:]
+% %     \(
+% %     (\neg{v_{B_1}} \wedge \dots \wedge \neg{v_{B_m}}) \rightarrow \neg{a}
+% %     \)
+% %   \item[BTA:]
+% %     \(
+% %     a \rightarrow (v_{B_1} \vee \dots \vee v_{B_m})
+% %     \)
+% %   \end{description}
+% %   both being equivalent to
+% %   \(
+% %   v_{B_1} \vee \dots \vee v_{B_m} \vee \neg{a}
+% %   \)
+% \end{itemize}
+% \end{frame}
+% %----------------------------------------------------------------
+% \begin{frame}{Body-oriented nogoods and tableau rules}
+
+% \begin{itemize}
+% \item Tableau rules FTB, BFB, FFB, and BTB are body-oriented
+% \pause
+% \item For a body
+%   $B=\{a_1,\dots,a_m,\naf{a_{m+1}},\dots,\naf{a_n}\}=\{l_1,\dots,l_n\}$,\\
+%   consider the equivalence:
+%   \quad
+%   \(
+%   v_{B}\leftrightarrow a_1\wedge\dots\wedge a_m\wedge \neg a_{m+1}\wedge\dots\wedge\neg a_n
+%   \)
+% \pause
+% \item Inferences from nogood
+%   \(
+%   \clno{B}
+%   =
+%   \{\Fsigned{B},\Tsigned{a_1},\dots,\Tsigned{a_m},\Fsigned{a_{m+1}},\dots,\Fsigned{a_n}\}
+%   \)\\
+%   correspond to those from tableau rules \alert{FTB} and \alert{BFB}:
+% \[
+% \begin{array}{c}
+% a \leftarrow l_1,\dots,l_n \\
+% \plit{l_1},\dots,\plit{l_n} \\\hline
+% \Tsigned{\{l_1,\dots,l_n\}}
+% \end{array}
+% \qquad\qquad%\qquad
+% \begin{array}{c}
+% \Fsigned{\{l_1,\dots,l_n\}} \\
+% \plit{l_1},\dots,\plit{l_{i-1}},\plit{l_{i+1}},\dots,\plit{l_n} \\\hline
+% \nlit{l_i}
+% \end{array}
+% \]
+% % \begin{description}
+% %   \item [FTB:]
+% %     \(
+% %     (a_1\wedge\dots\wedge a_m\wedge\neg a_{m+1}\wedge\dots\wedge\neg a_n)\rightarrow v_{B}
+% %     \)
+% %   \item[BFB:]
+% %     \(
+% %     \neg{v_{B}} \rightarrow
+% %     (\neg a_1\vee\dots\vee\neg a_m\vee a_{m+1}\vee\dots\vee a_n)
+% %     \)
+% %   \end{description}
+% %   both being equivalent to
+% %   \(
+% %   (\neg a_1\vee\dots\vee\neg a_m\vee a_{m+1}\vee\dots\vee a_n
+% %   \vee v_{B})
+% %   \)
+% %\newslide\mbox{}\bigskip
+% % \newpage
+% \pause
+% \item Inferences from nogoods
+%   \(
+%   \ClNo{B}
+%   =
+%   \{\,\{\Tsigned{B},\Fsigned{a_1}\},
+%   \dots,
+%   \{\Tsigned{B},\Fsigned{a_m}\},
+%   \{\Tsigned{B},\Tsigned{a_{m+1}}\},
+%   \dots,
+%   \{\Tsigned{B},\Tsigned{a_n}\}\,\}
+%   \)
+%   correspond to those from tableau rules \alert{FFB} and \alert{BTB}:
+% \begin{array}[b]{c}
+% a \leftarrow l_1,\dots,l_i,\dots,l_n \\
+% \nlit{l_i} \\\hline
+% \Fsigned{\{l_1,\dots,l_i,\dots,l_n\}}
+% \end{array}
+% \qquad\qquad%\qquad
+% \begin{array}[b]{c}
+% \Tsigned{\{l_1,\dots,l_i,\dots,l_n\}} \\\hline
+% \plit{l_i}
+% \end{array}
+% %   \begin{description}
+% %   \item [FFB:]
+% %     \(
+% %     (\neg a_1\vee\dots\vee\neg a_m\vee a_{m+1}\vee\dots\vee a_n)
+% %     \rightarrow \neg{v_{B}}
+% %     \)
+% %   \item [BTB:]
+% %     \(
+% %     v_{B}\rightarrow (a_1\wedge\dots\wedge a_m\wedge\neg a_{m+1}\wedge\dots\wedge\neg a_n)
+% %     \)
+% %   \end{description}
+% %   both being equivalent to
+% %     \(
+% %     (a_1 \vee \neg{v_{B}})
+% %     \wedge \dots \wedge
+% %     (a_m \vee \neg{v_{B}})
+% %     \wedge
+% %     (\neg a_{m+1} \vee \neg{v_{B}})
+% %     \wedge \dots \wedge
+% %     (\neg a_n \vee \neg{v_{B}})
+% %     \)
+% \end{itemize}
+% \end{frame}
+%------------------------------------------------------------
+\subsection{Nogoods from loop formulas}
+%----------------------------------------------------------------
+\begin{frame}{Nogoods from logic programs\\[-1ex]\normalsize via loop formulas}
+
+  Let $P$ be a normal logic program and recall that:
+  %
+  \begin{itemize}
+  \item <1->
+    For $L\subseteq\atom{P}$,
+    the external supports of $L$ for $P$ are
+    \begin{eqnarray*}
+      \ES{L}{P}
+      & = &
+      \{r\in P\mid\head{r}\in L \text{ and } \pbody{r}\cap L=\emptyset\}
+    \end{eqnarray*}
+
+  \item <2->
+    The (disjunctive) loop formula of $L$ for $P$ is
+    \begin{eqnarray*}
+      \LFM{L}{P}
+      & = &
+      \big(
+      \mbox{$\bigvee_{A\in L}$} A
+      \big)
+      \rightarrow
+      \big(
+      \mbox{$\bigvee_{r\in\ES{L}{P}}$}
+      % \comp BUGGED :)
+      {\body{r}}
+      \big)
+      \\
+      & \leftrightarrow &
+      \big(
+      % \left(
+      \mbox{$\bigwedge_{r\in\ES{L}{P}}$}
+      \neg% \comp
+      {\body{r}}
+      \big)
+      % \right)
+      \rightarrow
+      \big(
+      \mbox{$\bigwedge_{A\in L}$}\neg A
+      \big)
+    \end{eqnarray*}
+    \vspace*{-4mm}
+    \begin{itemize}
+    \item \structure{Note}
+      The loop formula of $L$ enforces
+      all atoms in~$L$ to be \emph{false}
+      \par
+      whenever $L$ is not externally supported
+    \end{itemize}
+
+  \item <3-> The external bodies of $L$ for $P$ are
+    \begin{eqnarray*}
+      \EB{L}{P} & = & \{\body{r} \mid r\in \ES{L}{P}\}
+    \end{eqnarray*}
+  \end{itemize}
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}{Nogoods from logic programs\\[-1ex]\normalsize loop nogoods} %\label{cdnl:lambda}
+  \begin{itemize}
+  \item<1->
+    For a logic program $P$ and some $\emptyset \subset U\subseteq\atom{P}$,\\
+    define the \alert{loop nogood} of an atom $a\in U$ as
+    \begin{eqnarray*}
+      \lambda(a,U)
+      & = &
+      \{\Tsigned{a},\Fsigned{B_1},\dots,\Fsigned{B_k}\}
+    \end{eqnarray*}
+    where $\EB{U}{P}=\{B_1,\dots,B_k\}$
+    \medskip
+  \item<2->
+    We get the following set of loop nogoods for $P$:
+    \begin{eqnarray*}
+      \Lambda_P
+      & = &
+      \textstyle
+      \bigcup_{\emptyset\subset U\subseteq \atom{P}}
+      \{
+      \lambda(a,U)
+      \mid
+      a\in U
+      \}
+    \end{eqnarray*}
+  \item<3->  The set $\Lambda_P$ of loop nogoods denies cyclic
+    support among \emph{true} atoms
+  \end{itemize}
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}{Example}
+  \begin{itemize}
+  \item<1-> Consider the program
+    \[
+    \left\{
+      \begin{array}{l}
+        x  \leftarrow  \naf{y}\\
+        y  \leftarrow  \naf{x}
+      \end{array}
+      \
+      \begin{array}{l}
+        u  \leftarrow  x\\
+        \alert{u}  \leftarrow  \alert{v}\\
+        \alert{v}  \leftarrow  \alert{u}, y
+      \end{array}
+    \right\}
+    \]
+  \item<2-> For $u$ in the set $\{u,v\}$, we obtain the loop nogood:
+    \begin{eqnarray*}
+      \lambda(u,\{u,v\}) &=& \{\Tsigned{u},\Fsigned{\{x\}}\}
+    \end{eqnarray*}
+  \item<3-> [] Similarly for $v$ in $\{u,v\}$, we get:
+    \begin{eqnarray*}
+      \lambda(v,\{u,v\}) &=& \{\Tsigned{v},\Fsigned{\{x\}}\}
+    \end{eqnarray*}
+  \end{itemize}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{Characterization of stable models}
+\bigskip
+\begin{theorem}
+Let $P$ be a logic program. Then,
+
+\qquad $X\subseteq\atom{P}$ is a stable model of~$P$ \alert{iff}
+
+\qquad $X=\tlits{\ass}\cap\atom{P}$ for a (unique)
+solution \ass\ for $\Delta_P\cup\Lambda_P$
+\end{theorem}
+\bigskip
+\pause
+\begin{description}
+\item [Some remarks] \
+\begin{itemize}
+\item
+Nogoods in $\Lambda_P$ augment $\Delta_P$
+with conditions checking for \alert{unfounded sets},
+in particular,
+those being loops
+\item
+While $|\Delta_P|$ is linear in the size of $P$,
+$\Lambda_P$ may contain \alert{exponentially many} (non-redundant) loop nogoods
+\end{itemize}
+\end{description}
+\end{frame}
+% ----------------------------------------------------------------------
+\section{Conflict-driven nogood learning}
+% ----------------------------------------------------------------------
+\input{solving/cdcl-motivation}
+\input{solving/dpll}
+\input{solving/cdcl}
+% ----------------------------------------------------------------------
+\subsection{CDNL-ASP Algorithm}
+% ----------------------------------------------------------------------
+\begin{frame}{Outline of CDNL-ASP algorithm}
+\begin{itemize}
+\item Keep track of deterministic consequences by unit propagation on:
+  \begin{itemize}
+  \item Program completion \hfill [$\Delta_P$]%
+  \item Loop nogoods, determined and recorded on demand \hfill [$\Lambda_P$]%
+    % \begin{itemize}
+    % \item \structure{Note} Dedicated unfounded set detection !
+    % \end{itemize}
+  \item Dynamic nogoods, derived from conflicts and unfounded sets \hfill[$\nabla$]%
+  \end{itemize}
+\pause
+\item When a nogood in $\Delta_P\cup\nabla$ becomes \alert<2>{violated}:
+  \begin{itemize}
+  \item \alert<2>{Analyze} the conflict by resolution
+    \par
+    (until reaching a {Unique Implication Point}, short: UIP)
+  \item \alert<2>{Learn} the derived conflict nogood~$\delta$
+  \item \alert<2>{Backjump} to the earliest (heuristic) choice such that
+        the\par complement of the UIP is unit-resulting for $\delta$
+  \item \alert<2>{Assert} the complement of the UIP and proceed\\
+        (by unit propagation)
+  \end{itemize}
+\pause
+\item Terminate when either:
+  \begin{itemize}
+  \item Finding a stable model (a solution for $\Delta_P\cup\Lambda_P$)
+  \item Deriving a conflict independently of (heuristic) choices
+  \end{itemize}
+\end{itemize}
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}[c]%
+\SetAlFnt{\scriptsize}
+\input{solving/algo_cdnl}
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}{Observations}
+\begin{itemize}
+\item Decision level~$\mathit{dl}$,
+      initially set to~$0$,
+      is used to count the number of heuristically chosen
+      literals in assignment~\ass
+\item For a heuristically chosen literal
+      $\sigma_{\!d}=\Tsigned{a}$ or $\sigma_{\!d}=\Fsigned{a}$,
+      respectively,
+      we require $a\in(\atom{P}\cup\body{P})\setminus(\tlits{\ass}\cup\flits{\ass})$
+\item For any literal $\sigma\in\ass$,
+      $\dlevel{\sigma}$ denotes the decision level of~$\sigma$,
+      viz.\ the value $\mathit{dl}$ had when $\sigma$ was assigned
+\pause
+\item A conflict is detected from violation of a nogood $\varepsilon\subseteq\Delta_P\cup\nabla$
+\item A conflict at decision level~$0$
+      (where~\ass\ contains no heuristically chosen literals)
+      indicates non-existence of stable models
+\item A nogood $\delta$ derived by conflict analysis is
+      \alert{asserting}, that is,\\
+      some literal is unit-resulting for $\delta$ at a decision level $k<\mathit{dl}$
+\pause
+  \begin{itemize}
+  \item After learning~$\delta$ and backjumping to
+                  decision level~$k$,\\ at least one literal is
+                  newly derivable by unit propagation
+  \item No explicit flipping of heuristically chosen literals !
+  \end{itemize}
+\end{itemize}
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}{Example: {CDNL-ASP}}
+Consider
+\begin{eqnarray*}
+P
+& = &
+\left\{
+  \begin{array}{l}
+x  \leftarrow  \naf{y}\\%[-3pt]
+y  \leftarrow  \naf{x}
+\end{array}
+\
+\begin{array}{l}
+u  \leftarrow x,y\\%[-3pt]
+u  \leftarrow v%\\%[-3pt]
+\end{array}
+\
+\begin{array}{l}
+v  \leftarrow x\\%[-3pt]
+v  \leftarrow u,y%\\%[-3pt]
+\end{array}
+\
+\begin{array}{l}
+w  \leftarrow \naf{x},\naf{y}\\
+\mbox{~}
+\end{array}
+\right\}
+\end{eqnarray*}
+%\pause
+\[
+\begin{array}[b]{|c|ll|l|}
+\hline
+\mathit{dl}& \sigma_{\!d} & \overline{\sigma} & \delta
+\\\hline\hline
+\onslide<2->{1} & \onslide<2->{\Tsigned{u}} & &
+\\\hline
+\onslide<3->{2} & \onslide<3->{\Fsigned{\{\naf{x},\naf{y}\}}} & &
+\\
+  & & \onslide<4->{\Fsigned{w}}     & \onslide<4->{\{\Tsigned{w},\Fsigned{\{\naf{x},\naf{y}\}}\}=\clno{w}}
+\\\hline
+\onslide<5->{3} & \onslide<5->{\Fsigned{\{\naf{y}\}}} & &
+\\
+  & & \onslide<6->{\Fsigned{x}} & \onslide<6->{\{\Tsigned{x},\Fsigned{\{\naf{y}\}}\}=\clno{x}}
+\\
+  & & \onslide<6->{\Fsigned{\{x\}}} & \onslide<6->{\{\Tsigned{\{x\}},\Fsigned{x}\}\in\ClNo{\{x\}}}
+\\
+  & & \onslide<6->{\Fsigned{\{x,y\}}} & \onslide<6->{\{\Tsigned{\{x,y\}},\Fsigned{x}\}\in\ClNo{\{x,y\}}}
+\\
+  & & \onslide<7->{\vdots} & \onslide<7->{\vdots}
+\\
+& & & \onslide<7->{\{\Tsigned{u},\Fsigned{\{x\}},\Fsigned{\{x,y\}}\}=\lambda(u,\{u,v\})}
+\\\hline
+\end{array}
+~\raisebox{1mm}{\onslide<7->{\KO}}
+\]
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}{Example: {CDNL-ASP}}
+Consider
+\begin{eqnarray*}
+P
+& = &
+\left\{
+  \begin{array}{l}
+x  \leftarrow  \naf{y}\\%[-3pt]
+y  \leftarrow  \naf{x}
+\end{array}
+\
+\begin{array}{l}
+u  \leftarrow x,y\\%[-3pt]
+u  \leftarrow v%\\%[-3pt]
+\end{array}
+\
+\begin{array}{l}
+v  \leftarrow x\\%[-3pt]
+v  \leftarrow u,y%\\%[-3pt]
+\end{array}
+\
+\begin{array}{l}
+w  \leftarrow \naf{x},\naf{y}\\
+\mbox{~}
+\end{array}
+\right\}
+\end{eqnarray*}
+%
+\[
+\begin{array}[b]{|c|ll|l|}
+\hline
+\mathit{dl}& \sigma_{\!d} & \overline{\sigma} & \delta
+\\\hline\hline
+1 & \alert<4>{\Tsigned{u}} & \phantom{\Fsigned{\{x,y\}}}&\phantom{\{\Tsigned{u},\Fsigned{\{x\}},\Fsigned{\{x,y\}}\}=\lambda(u,\{u,v\})}
+\\
+  & \phantom{\Fsigned{\{\naf{x},\naf{y}\}}}& \onslide<2->{\alert<4>{\Tsigned{x}}} & \onslide<2->{\{\Tsigned{u},\Fsigned{x}\}\in\nabla}
+\\
+  & & \onslide<3->{\vdots} & \onslide<3->{\vdots}
+\\
+  & & \onslide<3->{\alert<4>{\Tsigned{v}}} & \onslide<3->{\{\Fsigned{v},\Tsigned{\{x\}}\}\in\ClNo{v}}
+\\
+  & & \onslide<3->{\Fsigned{y}} & \onslide<3->{\{\Tsigned{y},\Fsigned{\{\naf{x}\}}\}=\clno{y}}
+\\
+  & & \onslide<3->{\Fsigned{w}} & \onslide<3->{\{\Tsigned{w},\Fsigned{\{\naf{x},\naf{y}\}}\}=\clno{w}}
+\\\hline
+\end{array}
+\]
+\bigskip\bigskip\bigskip\bigskip\bigskip\bigskip
+\end{frame}
+%------------------------------------------------------------
+\subsection{Nogood Propagation}
+%------------------------------------------------------------
+\begin{frame}{Outline of {NogoodPropagation}}
+\begin{itemize}
+\item Derive deterministic consequences via:
+  \begin{itemize}
+  \item Unit propagation on $\Delta_P$ and $\nabla$;
+  \item Unfounded sets~$U\subseteq\atom{P}$
+  \end{itemize}
+\item Note that $U$ is \alert{unfounded} if $\EB{U}{P}\subseteq\flits{\ass}$
+  \begin{itemize}
+  \item \structure{Note} For any $a\in U$, we have $(\lambda(a,U)\setminus\{\Tsigned{a}\})\subseteq\ass$
+  \end{itemize}
+\pause
+\item An ``interesting'' unfounded set~$U$ satisfies:
+\[
+  \emptyset\subset U \subseteq (\atom{P}\setminus\flits{\ass})
+\]
+\item Wrt a fixpoint of unit propagation,\\
+\pause
+      such an unfounded set contains some loop of~$P$
+  \begin{itemize}
+  \item \structure{Note} Tight programs do not yield ``interesting'' unfounded sets !
+  \end{itemize}
+\pause
+\item Given an unfounded set $U$ and some $a\in U$,
+      adding $\lambda(a,U)$ to $\nabla$ triggers a conflict or
+      further derivations by unit propagation
+  \begin{itemize}
+  \item \structure{Note} Add loop nogoods atom by atom to eventually falsify all $a\in U$
+  \end{itemize}
+\end{itemize}
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}[c]
+\SetAlFnt{\tiny}
+\input{solving/algo_unit_propagation}
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}{Requirements for \UnFoundedSet}
+\begin{itemize}
+\item<1-> Implementations of \UnFoundedSet\ must guarantee the following for a result $U$
+  \begin{enumerate}
+  \item $U\subseteq (\atom{P}\setminus\flits{\ass})$
+  \item $\EB{U}{P}\subseteq\flits{\ass}$
+  \item $U=\emptyset$ iff there is no nonempty unfounded subset of $(\atom{P}\setminus\flits{\ass})$
+  \end{enumerate}
+
+\item<2-> Beyond that, there are various alternatives, such as:
+  \begin{itemize}
+  \item Calculating the greatest unfounded set
+  \item Calculating unfounded sets within strongly connected components
+        of the positive atom dependency graph of~$P$
+        \medskip
+  \item Usually, the latter option is implemented in ASP solvers
+  \end{itemize}
+\end{itemize}
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}{Example: {NogoodPropagation}}
+Consider
+\begin{eqnarray*}
+P
+& = &
+\left\{
+  \begin{array}{l}
+x  \leftarrow  \naf{y}\\%[-3pt]
+y  \leftarrow  \naf{x}
+\end{array}
+\
+\begin{array}{l}
+u  \leftarrow x,y\\%[-3pt]
+u  \leftarrow v%\\%[-3pt]
+\end{array}
+\
+\begin{array}{l}
+v  \leftarrow x\\%[-3pt]
+v  \leftarrow u,y%\\%[-3pt]
+\end{array}
+\
+\begin{array}{l}
+w  \leftarrow \naf{x},\naf{y}\\
+\mbox{~}
+\end{array}
+\right\}
+\end{eqnarray*}
+%
+\[
+\footnotesize
+\begin{array}[b]{|c|ll|l|}
+\hline
+\mathit{dl}& \sigma_{\!d} & \overline{\sigma} & \delta
+\\\hline\hline
+1 & \Tsigned{u} & &
+\\\hline
+2 & \Fsigned{\{\naf{x},\naf{y}\}} & &
+\\
+  & & \Fsigned{w}     & \{\Tsigned{w},\Fsigned{\{\naf{x},\naf{y}\}}\}=\clno{w}
+\\\hline
+3 & \Fsigned{\{\naf{y}\}} & &
+\\
+  & & \Fsigned{x}     & \{\Tsigned{x},\Fsigned{\{\naf{y}\}}\}=\clno{x}
+\\
+  & & \Fsigned{\{x\}} & \{\Tsigned{\{x\}},\Fsigned{x}\}\in\ClNo{\{x\}}
+\\
+  & & \Fsigned{\{x,y\}} & \{\Tsigned{\{x,y\}},\Fsigned{x}\}\in\ClNo{\{x,y\}}
+\\
+  & & \Tsigned{\{\naf{x}\}} & \{\Fsigned{\{\naf{x}\}},\Fsigned{x}\}=\clno{\{\naf{x}\}}
+\\
+  & & \Tsigned{y} & \{\Fsigned{\{\naf{y}\}},\Fsigned{y}\}=\clno{\{\naf{y}\}}
+\\
+%   & & \Fsigned{\{\naf{x},\naf{y}\}} & \{\Tsigned{\{\naf{x},\naf{y}\}},\Tsigned{y}\}\in\ClNo{\{\naf{x},\naf{y}\}}
+% \\
+  & & \Tsigned{\{v\}} & \{\Tsigned{u},\Fsigned{\{x,y\}},\Fsigned\{v\}\}=\clno{u}
+\\
+  & & \Tsigned{\{u,y\}} & \{\Fsigned{\{u,y\}},\Tsigned{u},\Tsigned{y}\}=\clno{\{u,y\}}
+\\
+  & & \Tsigned{v} & \{\Fsigned{v},\Tsigned{\{u,y\}}\}\in\ClNo{v}
+\\
+  & & & \{\Tsigned{u},\Fsigned{\{x\}},\Fsigned{\{x,y\}}\}=\lambda(u,\{u,v\})
+\\\hline
+\end{array}
+~\raisebox{1mm}{\KO}
+\]
+\end{frame}
+%------------------------------------------------------------
+\subsection{Conflict Analysis}
+%------------------------------------------------------------
+\begin{frame}{Outline of {ConflictAnalysis}}
+\begin{itemize}
+\item Conflict analysis is triggered whenever
+      some nogood $\delta\in\Delta_P\cup\nabla$
+      becomes violated, viz.\ $\delta\subseteq\ass$,
+      at a decision level~$\mathit{dl}>0$
+      \begin{itemize}
+      \item Note that all but the first literal assigned at $\mathit{dl}$
+        have been unit-resulting for nogoods
+        $\varepsilon\in\Delta_P\cup\nabla$
+      \item If $\sigma\in\delta$ has been unit-resulting for~$\varepsilon$,
+        we obtain a new violated nogood
+        by resolving $\delta$ and $\varepsilon$ as follows:
+        \[
+        (\delta\setminus\{\sigma\})\cup(\varepsilon\setminus\{\overline{\sigma}\})
+        \]
+      \end{itemize}
+\pause
+\item Resolution is directed by resolving first over the literal $\sigma\in\delta$
+      derived last, viz.\ $(\delta\setminus\ass[\sigma])=\{\sigma\}$
+      \begin{itemize}
+      \item Iterated resolution progresses in inverse
+                     order of assignment
+      \end{itemize}
+\pause
+\item Iterated resolution stops as soon as it generates
+      a nogood~$\delta$ containing exactly one literal~$\sigma$ assigned
+      at decision level~$\mathit{dl}$
+  \begin{itemize}
+  \item This literal $\sigma$ is called \alert{First Unique Implication Point} (First-UIP)
+  \item All literals in $(\delta\setminus\{\sigma\})$ are assigned
+        at decision levels smaller than~$\mathit{dl}$
+  \end{itemize}
+\end{itemize}
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}[c]
+\input{solving/algo_conflict_analysis}
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}{Example: {ConflictAnalysis}}
+Consider
+\begin{eqnarray*}
+P
+& = &
+\left\{
+  \begin{array}{l}
+x  \leftarrow  \naf{y}\\%[-3pt]
+y  \leftarrow  \naf{x}
+\end{array}
+\
+\begin{array}{l}
+u  \leftarrow x,y\\%[-3pt]
+u  \leftarrow v%\\%[-3pt]
+\end{array}
+\
+\begin{array}{l}
+v  \leftarrow x\\%[-3pt]
+v  \leftarrow u,y%\\%[-3pt]
+\end{array}
+\
+\begin{array}{l}
+w  \leftarrow \naf{x},\naf{y}\\
+\mbox{~}
+\end{array}
+\right\}
+\end{eqnarray*}
+%
+\[
+\footnotesize
+\begin{array}{|@{\:}c@{\:}|@{\:}l@{\:}l@{\:}|@{\:}l@{\:}|l}
+\cline{1-4}
+\mathit{dl}& \sigma_{\!d} & \overline{\sigma} & \delta
+\\\cline{1-4}\cline{1-4}
+1 & \alert<2,5,8>{\Tsigned{u}} & &
+\\\cline{1-4}
+2 & \Fsigned{\{\naf{x},\naf{y}\}} & &
+\\
+  & & \Fsigned{w}     & \{\Tsigned{w},\Fsigned{\{\naf{x},\naf{y}\}}\}=\clno{w}
+\\\cline{1-4}
+3 & \Fsigned{\{\naf{y}\}} & &
+\\
+  & & \alert<5-6,8-9>{\Fsigned{x}}     & \{\Tsigned{x},\Fsigned{\{\naf{y}\}}\}=\clno{x}
+\\
+  & & \alert<2-3,5-6>{\Fsigned{\{x\}}} & \{\alert<7>{\Tsigned{\{x\}}},\alert<8>{\Fsigned{x}}\}\in\ClNo{\{x\}}
+& \onslide<8->{\alert<8,10>{\{\Tsigned{u},\alert<9>{\Fsigned{x}}\}}}
+\\
+  & & \alert<2-3>{\Fsigned{\{x,y\}}} & \{\alert<4>{\Tsigned{\{x,y\}}},\alert<5>{\Fsigned{x}}\}\in\ClNo{\{x,y\}} & \onslide<5->{\alert<5>{\{\alert<8>{\Tsigned{u}},\alert<6,8>{\Fsigned{x}},\alert<6-7>{\Fsigned{\{x\}}}\}}}
+\\
+  & & \Tsigned{\{\naf{x}\}} & \{\Fsigned{\{\naf{x}\}},\Fsigned{x}\}=\clno{\{\naf{x}\}}
+\\
+  & & \Tsigned{y} & \{\Fsigned{\{\naf{y}\}},\Fsigned{y}\}=\clno{\{\naf{y}\}}
+\\
+%   & & \Fsigned{\{\naf{x},\naf{y}\}} & \{\Tsigned{\{\naf{x},\naf{y}\}},\Tsigned{y}\}\in\ClNo{\{\naf{x},\naf{y}\}}
+% \\
+  & & \Tsigned{\{v\}} & \{\Tsigned{u},\Fsigned{\{x,y\}},\Fsigned\{v\}\}=\clno{u}
+\\
+  & & \Tsigned{\{u,y\}} & \{\Fsigned{\{u,y\}},\Tsigned{u},\Tsigned{y}\}=\clno{\{u,y\}}
+\\
+  & & \Tsigned{v} & \{\Fsigned{v},\Tsigned{\{u,y\}}\}\in\ClNo{v}
+\\
+  & & & \alert<2>{\{\alert<5>{\Tsigned{u}},\alert<3,5>{\Fsigned{\{x\}}},\alert<3-4>{\Fsigned{\{x,y\}}}\}}=\lambda(u,\{u,v\}) & \text{\KO}
+\\\cline{1-4}
+\end{array}
+\]
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}{Remarks}
+\begin{itemize}
+\item
+There always is a First-UIP at which conflict analysis terminates
+\begin{itemize}
+\item
+In the worst, resolution stops at the
+heuristically chosen literal\\ assigned at decision level~$\mathit{dl}$
+\end{itemize}
+\pause
+\item
+The nogood~$\delta$ containing First-UIP~$\sigma$ is violated by~\ass,
+viz.\ $\delta\subseteq\ass$
+\item
+We have $k=\mathit{max}(\{\mathit{dl}(\sigmaAUX)\mid\sigmaAUX\in\delta\setminus\{\sigma\}\}\cup\{0\})<\mathit{dl}$
+\pause
+  \begin{itemize}
+  \item
+  After recording $\delta$ in $\nabla$ and backjumping to decision level~$k$,\\
+  $\overline{\sigma}$ is unit-resulting for $\delta$ !
+  \item
+  Such a nogood $\delta$ is called \alert{asserting}
+  \end{itemize}
+\pause
+\item
+Asserting nogoods direct conflict-driven search into a different
+region of the search space than traversed before,\\
+without explicitly flipping any heuristically chosen literal !
+\end{itemize}
+\end{frame}
+% %------------------------------------------------------------
+% \section{Implementation via clasp}
+% %------------------------------------------------------------
+% \begin{frame}{The \texttt{clasp} system}
+% \begin{itemize}
+% \item Native ASP solver combining conflict-driven search
+%       with sophisticated reasoning techniques:
+%   \begin{itemize}
+%   \item
+%   Advanced preprocessing including, e.g.,
+%   % well-founded model computation and
+%   equivalence reasoning
+%   \item
+%   Lookback-based decision heuristics
+%   \item
+%   Restart policies
+%   \item
+%   Nogood deletion
+%   \item
+%   Progress saving
+%   \item
+%   Dedicated data structures for binary and ternary nogoods
+%   \item
+%   Lazy data structures (watched literals) for long nogoods
+%   \item
+%   Dedicated data structures for cardinality and weight constraints
+%   \item
+%   Lazy unfounded set checking based on ``source pointers''
+%   \item
+%   Tight integration of unit propagation and unfounded set checking
+%   \item
+%   \alert{Reasoning modes}
+%   \item
+%   \ldots
+%   \end{itemize}
+% \pause
+% \item[\ithand] Many of these techniques are configurable !
+% \end{itemize}
+% \end{frame}
+% %------------------------------------------------------------
+% \begin{frame}{Reasoning modes of \texttt{clasp}}
+% Beyond deciding stable model existence,
+% \texttt{clasp} allows for:
+% \begin{itemize}
+% \item Optimization
+% \item Enumeration \hfill [without solution recording]
+% \item Projective Enumeration \hfill [without solution recording]
+% \item Brave and Cautious Reasoning determining the
+%   \begin{itemize}
+%   \item union or
+%   \item intersection
+%   \end{itemize}
+%       of all stable models by computing only linearly many of them
+% \item[\ithand] Reasoning applicable wrt stable models as well as
+%                supported models
+% \end{itemize}
+% \pause
+% Front-ends also admit \texttt{clasp} to solve:
+% \begin{itemize}
+% \item Propositional CNF formulas
+% \item Pseudo-Boolean formulas
+% \end{itemize}
+% \pause
+% Find \texttt{clasp} at: \url{http://potassco.org}
+% \end{frame}
+% ------------------------------------------------------------
+% \begin{frame}{The system architecture of \clasp}
+% \centering
+% \ifpdf
+% {\includegraphics[width=200pt,angle=90]{Figures/system.pdf}}
+% \else
+% {\includegraphics[width=200pt]{Figures/system.eps}}
+% \fi
+% \end{frame}
+%------------------------------------------------------------
+% \begin{frame}{Watched literals}\label{slide:watched:literals}
+%   \begin{description}
+%   \item[Observation] A nogood becomes unit, if all but one of its literals become true
+%   \item[Before] Usage of counters following the Dowling/Gallier Algorithm
+%     \pause
+%   \item[Idea] \
+%     \begin{itemize}
+%     \item Assign two non-false \alert{watched literals} per nogood
+%     \item Only if one of the watched literals becomes false,
+%       the nogood is inspected:
+%       \begin{itemize}
+%       \item Try to find another non-false watched literal
+%       \item If no such literal exists, the nogood has become unit or obsolete
+%       \end{itemize}
+%     \end{itemize}
+%     \pause
+%   \item[Advantage] No updating when backjumping!
+%   \end{description}
+% \end{frame}
+%------------------------------------------------------------
+% \begin{frame}{Summary}
+%   \begin{itemize}
+%   \item We provided a \alert{uniform approach to ASP solving}, allowing for a
+%     transparent \alert{technology transfer from CP and SAT}
+%   \item The idea is to view ASP inferences as \alert{unit propagation on nogoods},
+%     reflecting \alert{constraints} from program rules, unfounded sets, and conflicts
+%   \item We have provided a \alert{conflict-driven algorithm for ASP} solving, using
+%     state-of-the-art SAT solving techniques
+%   \item Our approach \alert{favors local propagation} on explicit nogoods over unfounded
+%     set checks, which explicate inherent loop nogoods that give rise to unit
+%     propagation
+%   \item Our empirical results show that our ASP solver \alert{\clasp{} is competitive}
+%     with and sometimes superior to existing ASP solvers
+%   \end{itemize}
+% \end{frame}
+%------------------------------------------------------------
+%----------------------------------------------------------------
+%
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-PDF-mode: t
+%%% TeX-master: "asp"
+%%% End:

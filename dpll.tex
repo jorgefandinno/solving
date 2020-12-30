@@ -1,0 +1,34 @@
+\begin{frame}{DPLL-style solving}
+  \bigskip
+  \bigskip
+  \textbf{loop}
+  \begin{itemize}
+  \item [] \textit{propagate}
+    \hfill// deterministically assign literals
+  \item [] \textbf{if} no conflict \textbf{then}
+    \begin{itemize}
+    \item [] \textbf{if} all variables assigned
+      \textbf{then}
+      \textbf{return} solution
+    \item [] \textbf{else}
+      \textit{decide}
+      \hfill// non-deterministically assign some literal
+    \end{itemize}
+  \item [] \textbf{else}
+    \begin{itemize}
+    \item [] \textbf{if} top-level conflict
+      \textbf{then}
+      \textbf{return} unsatisfiable
+    \item [] \textbf{else}
+      \begin{itemize}
+      \item [] \textit{backtrack} \hfill// unassign literals propagated after last decision
+      \item [] \textit{flip} \hfill// assign complement of last decision literal
+      \end{itemize}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+%
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../asp"
+%%% End:

@@ -1,0 +1,40 @@
+\begin{algorithm}[t]\caption{\textsc{UnfoundedSet}\label{algo:unfounded:set}}
+\BlankLine
+\Input{A normal program $P$ and an assignment \ass.}
+\Output{An unfounded set of $P$ with respect to~\ass.}
+\Global{Source pointers $\{\source{a}\mid a\in\atom{P}\}$.}
+\BlankLine
+$S:=\{a\in\atom{P}\setminus\flits{\ass} \mid \source{a} \in \flits{\ass}\cup\{\undef\}\}$\AlgoComm*{initialize scope $S$}
+\Repeat{$T=\emptyset$}{%
+  $T:=\{a\in\atom{P}\setminus(\flits{\ass}\cup S) \mid \poslits{\source{a}}\cap (\scc{a}\cap S)\neq\emptyset\}$\;
+  $S:=S\cup T$\AlgoComm*{extend scope $S$}
+}
+\BlankLine
+\lWhile{$S\neq\emptyset$}{%
+  \Let(\AlgoComm*[f]{select starting point $a$}){$a\in S$}{%
+    $U:=\{a\}$\;
+    \Repeat{$U=\emptyset$}{%
+      \lIf{$\EB{U}{P}\subseteq\flits{\ass}$}{%
+        \Return $U$\AlgoComm*{(non-empty) unfounded set}
+      }
+      \Let{$B\in \EB{U}{P}\setminus\flits{\ass}$}{%
+        \uIf(\AlgoComm*[f]{shrink $U$}){$\poslits{B}\cap(\scc{a}\cap S)=\emptyset$}{%
+          \ForEach{$c\in U$ \SuchThat $B\in\atbody{P}{c}$}{%
+            $\source{c}:= B$\;
+            $U:= U\setminus\{c\}$\;
+            $S:= S\setminus\{c\}$
+          }
+        }
+        \lElse{%
+          $U:= U\cup (\poslits{B}\cap(\scc{a}\cap S))$\AlgoComm*{extend $U$}
+        }
+      }
+    }
+  }
+}
+\Return $\emptyset$\AlgoComm*{no unfounded set $\emptyset\subset U \subseteq\atom{P}\setminus\flits{\ass}$}
+\end{algorithm}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../asp"
+%%% End:

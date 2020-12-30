@@ -1,0 +1,45 @@
+\begin{algorithm}[H]
+\caption{\textsc{NogoodPropagation}\label{algo:unit:propagation}}
+\BlankLine
+\Input{A normal program $P$, a set $\nabla$ of nogoods, and an % ordered
+       assignment \ass.}
+\Output{An extended % ordered
+        assignment and set of nogoods.}
+\BlankLine
+$U := \emptyset$\AlgoComm*{unfounded set}
+\BlankLine
+\Loop{}{%
+  \Repeat{$\Sigma=\emptyset$}{%
+    \lIf{$\delta\subseteq \ass$ \ForSome $\delta\in\CN{P}\cup\nabla$}{%
+      \Return $(\ass,\nabla)$\AlgoComm*{conflict}
+    }
+    $\Sigma:=\{\delta\in\CN{P}\cup\nabla \mid \delta\setminus\ass=\{\opp{\sigma}\},\sigma\notin\ass\}$\AlgoComm*{unit-resulting nogoods}
+    \lIf{$\Sigma\neq\emptyset$}{%
+      \Let{$\opp{\sigma}\in\delta\setminus\ass$ \ForSome $\delta\in\Sigma$}{%
+        $\dlevel{\sigma}:= \max(\{\dlevel{\rho}\mid\rho\in\delta\setminus\{\opp{\sigma}\}\}\cup\{0\})$\;
+        $\ass:= \ass\circ\sigma$
+      }
+    }
+  }
+\BlankLine
+  \lIf{$\loops{P}=\emptyset$}{%
+    \Return $(\ass,\nabla)$%\AlgoComm*{no unfounded set $\emptyset\subset U \subseteq\atom{P}\setminus\flits{\ass}$}
+  }\;
+  $U:= U\setminus\flits{\ass}$\;
+  \lIf{$U=\emptyset$}{%
+    $U:=\UnFoundedSet{$P,\ass$}$
+  }\;
+  \lIf{$U=\emptyset$}{%
+    \Return $(\ass,\nabla)$\AlgoComm*{no unfounded set $\emptyset\subset U \subseteq\atom{P}\setminus\flits{\ass}$}
+  }
+  % \lLet{$a\in U$}{%
+  %   $\nabla:= \nabla\cup\{\lambda(a,U)\}$\AlgoComm*{(temporarily) record loop nogood}
+  \Let{$a\in U$}{%
+    $\nabla:= \nabla\cup\{\{\Tsigned{a}\}\cup\{\Fsigned{B}\mid B\in\EB{U}{P}\}\}$\hfill\textit{// record loop nogood}%
+  }
+}
+\end{algorithm}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../asp"
+%%% End:

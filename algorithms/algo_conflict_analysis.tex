@@ -1,0 +1,26 @@
+\begin{algorithm}[H]
+\caption{\textsc{ConflictAnalysis}\label{algo:conflict:analysis}}
+\BlankLine
+\Input{A non-empty violated nogood $\delta$, a normal program $P$, a set $\nabla$ of nogoods,
+       and an % ordered
+       assignment \ass.}
+\Output{A derived nogood and a decision level.}
+\BlankLine
+\Loop{}{%
+  \Let{$\sigma\in\delta$ \SuchThat $\delta\setminus\prefix{\ass}{\sigma} = \{\sigma\}$}{%
+    $k:=\max(\{\dlevel{\rho}\mid\rho\in\delta\setminus\{\sigma\}\}\cup\{0\})$\;
+    \uIf{$k=\dlevel{\sigma}$}{%
+      \Let{$\varepsilon\in\CN{P}\cup\nabla$ \SuchThat $\varepsilon\setminus\prefix{\ass}{\sigma} = \{\opp{\sigma}\}$}{%
+        $\delta:=(\delta\setminus\{\sigma\})\cup(\varepsilon\setminus\{\opp{\sigma}\})$\AlgoComm*{resolution}
+      }
+    }
+    \lElse{%
+      \Return $(\delta,k)$
+    }
+  }
+}
+\end{algorithm}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../asp"
+%%% End:

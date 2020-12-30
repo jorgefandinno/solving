@@ -1,0 +1,76 @@
+\begin{frame}{Assignments}
+  \begin{itemize}
+  \item<1-> An \alert{assignment} \ass\ over $\domain{\ass}=\atom{P}\cup\body{P}$
+    is a sequence
+    \[
+    (\sigma_1,\ldots,\sigma_n)
+    \]
+    of \alert{signed literals}
+    $\sigma_i$ of form \alert{$\Tsigned{v}$} or \alert{$\Fsigned{v}$} for
+    $v\in\domain{\ass}$ and $1 \leq i \leq n$
+  \item<1,7> $\Tsigned{v}$ expresses that $v$ is \emph{true} and $\Fsigned{v}$ that it is \emph{false}
+  \item<2,7> The complement, $\overline{\sigma}$, of a literal $\sigma$ is defined as
+    $\overline{\Tsigned{v}} = \Fsigned{v}$ and $\overline{\Fsigned{v}} = \Tsigned{v}$
+  \item<3,7> $\ass\circ\sigma$ stands for the result of appending $\sigma$ to \ass
+  \item<4,7> Given $\ass=(\sigma_1,\ldots,\sigma_{k-1},\sigma_k,\dots,\sigma_n)$,
+        we let $\ass[\sigma_k]=(\sigma_1,\ldots,\sigma_{k-1})$
+  \item<5,6,7> We sometimes identify an assignment with the set of its literals
+  \item<6,7>
+    Given this,
+    we access \emph{true} and \emph{false} propositions in \ass\ via
+    \[
+    \tlits{\ass}
+    =
+    \{v \in \domain{\ass} \mid \Tsigned{v} \in\ass\}
+    \text{ and }
+    \flits{\ass}
+    =
+    \{v \in \domain{\ass} \mid \Fsigned{v} \in\ass\}
+    \]
+  \end{itemize}
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}{Nogoods, solutions, and unit propagation}
+  \begin{itemize}
+  \item A \alert{nogood} is a set $\{\sigma_1,\ldots,\sigma_n\}$ of
+    signed literals,
+
+    expressing a \alert{constraint} violated by any assignment
+    \\
+    containing $\sigma_1,\ldots,\sigma_n$
+  \item<2-> An assignment \ass\ such that
+    \(
+    \tlits{\ass} \cup \flits{\ass}
+    =
+    \domain{\ass}
+    \)
+    and
+    \(
+    \tlits{\ass} \cap \flits{\ass}
+    =
+    \emptyset
+    \)
+
+    is a \alert{solution} for a set~$\Delta$ of nogoods,
+    if
+    $\delta\not\subseteq\ass$ for all $\delta\in\Delta$
+  \item<3-> For a nogood $\delta$, a literal $\sigma\in\delta$, and an assignment \ass,
+    we say that\\
+    \alert{$\overline{\sigma}$} is \alert{unit-resulting} for~$\delta$ wrt \ass,
+    if
+    \begin{enumerate}
+    \item $\delta\setminus\ass=\{\sigma\}$
+      and
+    \item $\overline{\sigma}\not\in\ass$
+    \end{enumerate}
+  \item<4-> For a set $\Delta$ of nogoods and an assignment~\ass,
+    \alert{unit propagation} is the iterated process of extending \ass\ with
+    unit-resulting literals until no further literal is unit-resulting for any
+    nogood in $\Delta$
+  \end{itemize}
+\end{frame}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../main"
+%%% End:

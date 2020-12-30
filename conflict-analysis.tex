@@ -1,0 +1,138 @@
+\begin{frame}{Outline of {ConflictAnalysis}}
+\begin{itemize}
+\item Conflict analysis is triggered whenever
+      some nogood $\delta\in\Delta_P\cup\nabla$
+      becomes violated, viz.\ $\delta\subseteq\ass$,
+      at a decision level~$\mathit{dl}>0$
+      \begin{itemize}
+      \item Note that all but the first literal assigned at $\mathit{dl}$
+        have been unit-resulting for nogoods
+        $\varepsilon\in\Delta_P\cup\nabla$
+      \item If $\sigma\in\delta$ has been unit-resulting for~$\varepsilon$,
+        we obtain a new violated nogood
+        by resolving $\delta$ and $\varepsilon$ as follows:
+        \[
+        (\delta\setminus\{\sigma\})\cup(\varepsilon\setminus\{\overline{\sigma}\})
+        \]
+      \end{itemize}
+\pause
+\item Resolution is directed by resolving first over the literal $\sigma\in\delta$
+      derived last, viz.\ $(\delta\setminus\ass[\sigma])=\{\sigma\}$
+      \begin{itemize}
+      \item Iterated resolution progresses in inverse
+                     order of assignment
+      \end{itemize}
+\pause
+\item Iterated resolution stops as soon as it generates
+      a nogood~$\delta$ containing exactly one literal~$\sigma$ assigned
+      at decision level~$\mathit{dl}$
+  \begin{itemize}
+  \item This literal $\sigma$ is called \alert{First Unique Implication Point} (First-UIP)
+  \item All literals in $(\delta\setminus\{\sigma\})$ are assigned
+        at decision levels smaller than~$\mathit{dl}$
+  \end{itemize}
+\end{itemize}
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}[c]
+\input{solving/algo_conflict_analysis}
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}{Example: {ConflictAnalysis}}
+Consider
+\begin{eqnarray*}
+P
+& = &
+\left\{
+  \begin{array}{l}
+x  \leftarrow  \naf{y}\\%[-3pt]
+y  \leftarrow  \naf{x}
+\end{array}
+\
+\begin{array}{l}
+u  \leftarrow x,y\\%[-3pt]
+u  \leftarrow v%\\%[-3pt]
+\end{array}
+\
+\begin{array}{l}
+v  \leftarrow x\\%[-3pt]
+v  \leftarrow u,y%\\%[-3pt]
+\end{array}
+\
+\begin{array}{l}
+w  \leftarrow \naf{x},\naf{y}\\
+\mbox{~}
+\end{array}
+\right\}
+\end{eqnarray*}
+%
+\[
+\footnotesize
+\begin{array}{|@{\:}c@{\:}|@{\:}l@{\:}l@{\:}|@{\:}l@{\:}|l}
+\cline{1-4}
+\mathit{dl}& \sigma_{\!d} & \overline{\sigma} & \delta
+\\\cline{1-4}\cline{1-4}
+1 & \alert<2,5,8>{\Tsigned{u}} & &
+\\\cline{1-4}
+2 & \Fsigned{\{\naf{x},\naf{y}\}} & &
+\\
+  & & \Fsigned{w}     & \{\Tsigned{w},\Fsigned{\{\naf{x},\naf{y}\}}\}=\clno{w}
+\\\cline{1-4}
+3 & \Fsigned{\{\naf{y}\}} & &
+\\
+  & & \alert<5-6,8-9>{\Fsigned{x}}     & \{\Tsigned{x},\Fsigned{\{\naf{y}\}}\}=\clno{x}
+\\
+  & & \alert<2-3,5-6>{\Fsigned{\{x\}}} & \{\alert<7>{\Tsigned{\{x\}}},\alert<8>{\Fsigned{x}}\}\in\ClNo{\{x\}}
+& \onslide<8->{\alert<8,10>{\{\Tsigned{u},\alert<9>{\Fsigned{x}}\}}}
+\\
+  & & \alert<2-3>{\Fsigned{\{x,y\}}} & \{\alert<4>{\Tsigned{\{x,y\}}},\alert<5>{\Fsigned{x}}\}\in\ClNo{\{x,y\}} & \onslide<5->{\alert<5>{\{\alert<8>{\Tsigned{u}},\alert<6,8>{\Fsigned{x}},\alert<6-7>{\Fsigned{\{x\}}}\}}}
+\\
+  & & \Tsigned{\{\naf{x}\}} & \{\Fsigned{\{\naf{x}\}},\Fsigned{x}\}=\clno{\{\naf{x}\}}
+\\
+  & & \Tsigned{y} & \{\Fsigned{\{\naf{y}\}},\Fsigned{y}\}=\clno{\{\naf{y}\}}
+\\
+%   & & \Fsigned{\{\naf{x},\naf{y}\}} & \{\Tsigned{\{\naf{x},\naf{y}\}},\Tsigned{y}\}\in\ClNo{\{\naf{x},\naf{y}\}}
+% \\
+  & & \Tsigned{\{v\}} & \{\Tsigned{u},\Fsigned{\{x,y\}},\Fsigned\{v\}\}=\clno{u}
+\\
+  & & \Tsigned{\{u,y\}} & \{\Fsigned{\{u,y\}},\Tsigned{u},\Tsigned{y}\}=\clno{\{u,y\}}
+\\
+  & & \Tsigned{v} & \{\Fsigned{v},\Tsigned{\{u,y\}}\}\in\ClNo{v}
+\\
+  & & & \alert<2>{\{\alert<5>{\Tsigned{u}},\alert<3,5>{\Fsigned{\{x\}}},\alert<3-4>{\Fsigned{\{x,y\}}}\}}=\lambda(u,\{u,v\}) & \text{\KO}
+\\\cline{1-4}
+\end{array}
+\]
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}{Remarks}
+\begin{itemize}
+\item
+There always is a First-UIP at which conflict analysis terminates
+\begin{itemize}
+\item
+In the worst, resolution stops at the
+heuristically chosen literal\\ assigned at decision level~$\mathit{dl}$
+\end{itemize}
+\pause
+\item
+The nogood~$\delta$ containing First-UIP~$\sigma$ is violated by~\ass,
+viz.\ $\delta\subseteq\ass$
+\item
+We have $k=\mathit{max}(\{\mathit{dl}(\sigmaAUX)\mid\sigmaAUX\in\delta\setminus\{\sigma\}\}\cup\{0\})<\mathit{dl}$
+\pause
+  \begin{itemize}
+  \item
+  After recording $\delta$ in $\nabla$ and backjumping to decision level~$k$,\\
+  $\overline{\sigma}$ is unit-resulting for $\delta$ !
+  \item
+  Such a nogood $\delta$ is called \alert{asserting}
+  \end{itemize}
+\pause
+\item
+Asserting nogoods direct conflict-driven search into a different
+region of the search space than traversed before,\\
+without explicitly flipping any heuristically chosen literal !
+\end{itemize}
+\end{frame}
+% %------------------------------------------------------------

@@ -1,0 +1,124 @@
+\begin{frame}{Outline of {NogoodPropagation}}
+\begin{itemize}
+\item Derive deterministic consequences via:
+  \begin{itemize}
+  \item Unit propagation on $\Delta_P$ and $\nabla$;
+  \item Unfounded sets~$U\subseteq\atom{P}$
+  \end{itemize}
+\item Note that $U$ is \alert{unfounded} if $\EB{U}{P}\subseteq\flits{\ass}$
+  \begin{itemize}
+  \item \structure{Note} For any $a\in U$, we have $(\lambda(a,U)\setminus\{\Tsigned{a}\})\subseteq\ass$
+  \end{itemize}
+\pause
+\item An ``interesting'' unfounded set~$U$ satisfies:
+\[
+  \emptyset\subset U \subseteq (\atom{P}\setminus\flits{\ass})
+\]
+\item Wrt a fixpoint of unit propagation,\\
+\pause
+      such an unfounded set contains some loop of~$P$
+  \begin{itemize}
+  \item \structure{Note} Tight programs do not yield ``interesting'' unfounded sets !
+  \end{itemize}
+\pause
+\item Given an unfounded set $U$ and some $a\in U$,
+      adding $\lambda(a,U)$ to $\nabla$ triggers a conflict or
+      further derivations by unit propagation
+  \begin{itemize}
+  \item \structure{Note} Add loop nogoods atom by atom to eventually falsify all $a\in U$
+  \end{itemize}
+\end{itemize}
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}[c]
+\SetAlFnt{\tiny}
+\input{solving/algo_unit_propagation}
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}{Requirements for \UnFoundedSet}
+\begin{itemize}
+\item<1-> Implementations of \UnFoundedSet\ must guarantee the following for a result $U$
+  \begin{enumerate}
+  \item $U\subseteq (\atom{P}\setminus\flits{\ass})$
+  \item $\EB{U}{P}\subseteq\flits{\ass}$
+  \item $U=\emptyset$ iff there is no nonempty unfounded subset of $(\atom{P}\setminus\flits{\ass})$
+  \end{enumerate}
+
+\item<2-> Beyond that, there are various alternatives, such as:
+  \begin{itemize}
+  \item Calculating the greatest unfounded set
+  \item Calculating unfounded sets within strongly connected components
+        of the positive atom dependency graph of~$P$
+        \medskip
+  \item Usually, the latter option is implemented in ASP solvers
+  \end{itemize}
+\end{itemize}
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}{Example: {NogoodPropagation}}
+Consider
+\begin{eqnarray*}
+P
+& = &
+\left\{
+  \begin{array}{l}
+x  \leftarrow  \naf{y}\\%[-3pt]
+y  \leftarrow  \naf{x}
+\end{array}
+\
+\begin{array}{l}
+u  \leftarrow x,y\\%[-3pt]
+u  \leftarrow v%\\%[-3pt]
+\end{array}
+\
+\begin{array}{l}
+v  \leftarrow x\\%[-3pt]
+v  \leftarrow u,y%\\%[-3pt]
+\end{array}
+\
+\begin{array}{l}
+w  \leftarrow \naf{x},\naf{y}\\
+\mbox{~}
+\end{array}
+\right\}
+\end{eqnarray*}
+%
+\[
+\footnotesize
+\begin{array}[b]{|c|ll|l|}
+\hline
+\mathit{dl}& \sigma_{\!d} & \overline{\sigma} & \delta
+\\\hline\hline
+1 & \Tsigned{u} & &
+\\\hline
+2 & \Fsigned{\{\naf{x},\naf{y}\}} & &
+\\
+  & & \Fsigned{w}     & \{\Tsigned{w},\Fsigned{\{\naf{x},\naf{y}\}}\}=\clno{w}
+\\\hline
+3 & \Fsigned{\{\naf{y}\}} & &
+\\
+  & & \Fsigned{x}     & \{\Tsigned{x},\Fsigned{\{\naf{y}\}}\}=\clno{x}
+\\
+  & & \Fsigned{\{x\}} & \{\Tsigned{\{x\}},\Fsigned{x}\}\in\ClNo{\{x\}}
+\\
+  & & \Fsigned{\{x,y\}} & \{\Tsigned{\{x,y\}},\Fsigned{x}\}\in\ClNo{\{x,y\}}
+\\
+  & & \Tsigned{\{\naf{x}\}} & \{\Fsigned{\{\naf{x}\}},\Fsigned{x}\}=\clno{\{\naf{x}\}}
+\\
+  & & \Tsigned{y} & \{\Fsigned{\{\naf{y}\}},\Fsigned{y}\}=\clno{\{\naf{y}\}}
+\\
+%   & & \Fsigned{\{\naf{x},\naf{y}\}} & \{\Tsigned{\{\naf{x},\naf{y}\}},\Tsigned{y}\}\in\ClNo{\{\naf{x},\naf{y}\}}
+% \\
+  & & \Tsigned{\{v\}} & \{\Tsigned{u},\Fsigned{\{x,y\}},\Fsigned\{v\}\}=\clno{u}
+\\
+  & & \Tsigned{\{u,y\}} & \{\Fsigned{\{u,y\}},\Tsigned{u},\Tsigned{y}\}=\clno{\{u,y\}}
+\\
+  & & \Tsigned{v} & \{\Fsigned{v},\Tsigned{\{u,y\}}\}\in\ClNo{v}
+\\
+  & & & \{\Tsigned{u},\Fsigned{\{x\}},\Fsigned{\{x,y\}}\}=\lambda(u,\{u,v\})
+\\\hline
+\end{array}
+~\raisebox{1mm}{\KO}
+\]
+\end{frame}
+%------------------------------------------------------------

@@ -1,0 +1,174 @@
+\begin{frame}{Outline of CDNL-ASP algorithm}
+\begin{itemize}
+\item Keep track of deterministic consequences by unit propagation on:
+  \begin{itemize}
+  \item Program completion \hfill [$\Delta_P$]%
+  \item Loop nogoods, determined and recorded on demand \hfill [$\Lambda_P$]%
+    % \begin{itemize}
+    % \item \structure{Note} Dedicated unfounded set detection !
+    % \end{itemize}
+  \item Dynamic nogoods, derived from conflicts and unfounded sets \hfill[$\nabla$]%
+  \end{itemize}
+\pause
+\item When a nogood in $\Delta_P\cup\nabla$ becomes \alert<2>{violated}:
+  \begin{itemize}
+  \item \alert<2>{Analyze} the conflict by resolution
+    \par
+    (until reaching a {Unique Implication Point}, short: UIP)
+  \item \alert<2>{Learn} the derived conflict nogood~$\delta$
+  \item \alert<2>{Backjump} to the earliest (heuristic) choice such that
+        the\par complement of the UIP is unit-resulting for $\delta$
+  \item \alert<2>{Assert} the complement of the UIP and proceed\\
+        (by unit propagation)
+  \end{itemize}
+\pause
+\item Terminate when either:
+  \begin{itemize}
+  \item Finding a stable model (a solution for $\Delta_P\cup\Lambda_P$)
+  \item Deriving a conflict independently of (heuristic) choices
+  \end{itemize}
+\end{itemize}
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}[c]%
+\SetAlFnt{\scriptsize}
+\input{solving/algo_cdnl}
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}{Observations}
+\begin{itemize}
+\item Decision level~$\mathit{dl}$,
+      initially set to~$0$,
+      is used to count the number of heuristically chosen
+      literals in assignment~\ass
+\item For a heuristically chosen literal
+      $\sigma_{\!d}=\Tsigned{a}$ or $\sigma_{\!d}=\Fsigned{a}$,
+      respectively,
+      we require $a\in(\atom{P}\cup\body{P})\setminus(\tlits{\ass}\cup\flits{\ass})$
+\item For any literal $\sigma\in\ass$,
+      $\dlevel{\sigma}$ denotes the decision level of~$\sigma$,
+      viz.\ the value $\mathit{dl}$ had when $\sigma$ was assigned
+\pause
+\item A conflict is detected from violation of a nogood $\varepsilon\subseteq\Delta_P\cup\nabla$
+\item A conflict at decision level~$0$
+      (where~\ass\ contains no heuristically chosen literals)
+      indicates non-existence of stable models
+\item A nogood $\delta$ derived by conflict analysis is
+      \alert{asserting}, that is,\\
+      some literal is unit-resulting for $\delta$ at a decision level $k<\mathit{dl}$
+\pause
+  \begin{itemize}
+  \item After learning~$\delta$ and backjumping to
+                  decision level~$k$,\\ at least one literal is
+                  newly derivable by unit propagation
+  \item No explicit flipping of heuristically chosen literals !
+  \end{itemize}
+\end{itemize}
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}{Example: {CDNL-ASP}}
+Consider
+\begin{eqnarray*}
+P
+& = &
+\left\{
+  \begin{array}{l}
+x  \leftarrow  \naf{y}\\%[-3pt]
+y  \leftarrow  \naf{x}
+\end{array}
+\
+\begin{array}{l}
+u  \leftarrow x,y\\%[-3pt]
+u  \leftarrow v%\\%[-3pt]
+\end{array}
+\
+\begin{array}{l}
+v  \leftarrow x\\%[-3pt]
+v  \leftarrow u,y%\\%[-3pt]
+\end{array}
+\
+\begin{array}{l}
+w  \leftarrow \naf{x},\naf{y}\\
+\mbox{~}
+\end{array}
+\right\}
+\end{eqnarray*}
+%\pause
+\[
+\begin{array}[b]{|c|ll|l|}
+\hline
+\mathit{dl}& \sigma_{\!d} & \overline{\sigma} & \delta
+\\\hline\hline
+\onslide<2->{1} & \onslide<2->{\Tsigned{u}} & &
+\\\hline
+\onslide<3->{2} & \onslide<3->{\Fsigned{\{\naf{x},\naf{y}\}}} & &
+\\
+  & & \onslide<4->{\Fsigned{w}}     & \onslide<4->{\{\Tsigned{w},\Fsigned{\{\naf{x},\naf{y}\}}\}=\clno{w}}
+\\\hline
+\onslide<5->{3} & \onslide<5->{\Fsigned{\{\naf{y}\}}} & &
+\\
+  & & \onslide<6->{\Fsigned{x}} & \onslide<6->{\{\Tsigned{x},\Fsigned{\{\naf{y}\}}\}=\clno{x}}
+\\
+  & & \onslide<6->{\Fsigned{\{x\}}} & \onslide<6->{\{\Tsigned{\{x\}},\Fsigned{x}\}\in\ClNo{\{x\}}}
+\\
+  & & \onslide<6->{\Fsigned{\{x,y\}}} & \onslide<6->{\{\Tsigned{\{x,y\}},\Fsigned{x}\}\in\ClNo{\{x,y\}}}
+\\
+  & & \onslide<7->{\vdots} & \onslide<7->{\vdots}
+\\
+& & & \onslide<7->{\{\Tsigned{u},\Fsigned{\{x\}},\Fsigned{\{x,y\}}\}=\lambda(u,\{u,v\})}
+\\\hline
+\end{array}
+~\raisebox{1mm}{\onslide<7->{\KO}}
+\]
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}{Example: {CDNL-ASP}}
+Consider
+\begin{eqnarray*}
+P
+& = &
+\left\{
+  \begin{array}{l}
+x  \leftarrow  \naf{y}\\%[-3pt]
+y  \leftarrow  \naf{x}
+\end{array}
+\
+\begin{array}{l}
+u  \leftarrow x,y\\%[-3pt]
+u  \leftarrow v%\\%[-3pt]
+\end{array}
+\
+\begin{array}{l}
+v  \leftarrow x\\%[-3pt]
+v  \leftarrow u,y%\\%[-3pt]
+\end{array}
+\
+\begin{array}{l}
+w  \leftarrow \naf{x},\naf{y}\\
+\mbox{~}
+\end{array}
+\right\}
+\end{eqnarray*}
+%
+\[
+\begin{array}[b]{|c|ll|l|}
+\hline
+\mathit{dl}& \sigma_{\!d} & \overline{\sigma} & \delta
+\\\hline\hline
+1 & \alert<4>{\Tsigned{u}} & \phantom{\Fsigned{\{x,y\}}}&\phantom{\{\Tsigned{u},\Fsigned{\{x\}},\Fsigned{\{x,y\}}\}=\lambda(u,\{u,v\})}
+\\
+  & \phantom{\Fsigned{\{\naf{x},\naf{y}\}}}& \onslide<2->{\alert<4>{\Tsigned{x}}} & \onslide<2->{\{\Tsigned{u},\Fsigned{x}\}\in\nabla}
+\\
+  & & \onslide<3->{\vdots} & \onslide<3->{\vdots}
+\\
+  & & \onslide<3->{\alert<4>{\Tsigned{v}}} & \onslide<3->{\{\Fsigned{v},\Tsigned{\{x\}}\}\in\ClNo{v}}
+\\
+  & & \onslide<3->{\Fsigned{y}} & \onslide<3->{\{\Tsigned{y},\Fsigned{\{\naf{x}\}}\}=\clno{y}}
+\\
+  & & \onslide<3->{\Fsigned{w}} & \onslide<3->{\{\Tsigned{w},\Fsigned{\{\naf{x},\naf{y}\}}\}=\clno{w}}
+\\\hline
+\end{array}
+\]
+\bigskip\bigskip\bigskip\bigskip\bigskip\bigskip
+\end{frame}
+%------------------------------------------------------------

@@ -1,0 +1,441 @@
+\begin{frame}[c]{Nogoods from logic programs\\[-1ex]\normalsize via program completion}
+
+The completion of a logic program $P$ can be defined as follows:
+%
+\begin{eqnarray*}
+  &&
+  \{
+  v_B \leftrightarrow
+  a_1          \wedge \dots \wedge a_m      \wedge
+  \neg a_{m+1} \wedge \dots \wedge \neg a_n \mid
+  \\&&\qquad\quad
+  B \in\body{P} \text{ and }
+  B = \{a_1,\dots,a_m,\naf{a_{m+1}},\dots,\naf{a_n}\}
+  \}
+  \\[6pt]
+  &\cup&
+  \{
+  a \leftrightarrow
+  v_{B_1} \vee \dots \vee v_{B_k}
+  \mid
+  \\&&\qquad\quad
+  a\in\atom{P} \text{ and }
+  \atbody{P}{a} = \{B_1,\dots,B_k\}
+  \}\ ,
+\end{eqnarray*}
+%
+where $\atbody{P}{a}=\{\body{r}\mid r\in P\text{ and }\head{r}=a\}$
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}{Nogoods from logic programs\\[-1ex]\normalsize via program completion}
+
+  \begin{itemize}
+%  \item<1-> Let $B=\{a_1,\dots,a_m,\naf{a_{m+1}},\dots,\naf{a_n}\}$ be a body
+  \item<1-> The (body-oriented) equivalence
+    \[
+    v_B \leftrightarrow
+         a_1     \wedge\dots\wedge      a_m \wedge
+    \neg a_{m+1} \wedge\dots\wedge \neg a_n
+    \]
+    can be decomposed into two implications:
+    \medskip
+    \begin{enumerate}
+    \item<only@2>\normalsize
+      \alert{%
+      \(
+      v_B \to
+           a_1     \wedge\dots\wedge      a_m \wedge
+      \neg a_{m+1} \wedge\dots\wedge \neg a_n
+      \)}
+
+      \smallskip
+      is equivalent to the conjunction of
+      \[
+      \neg v_B \vee  a_1
+      ,\ \dots,\
+      \neg v_B \vee  a_m
+      ,\
+      \neg v_B \vee  \neg a_{m+1}
+      ,\ \dots,\
+      % \text{ and }
+      \neg v_B \vee  \neg a_n
+      \]
+      and induces the set of nogoods
+      \alert{\small%
+        \[
+        \ClNo{B}
+        =
+        \{\,\{\Tsigned{B},\Fsigned{a_1}\},
+        \dots,
+        \{\Tsigned{B},\Fsigned{a_m}\},
+        \{\Tsigned{B},\Tsigned{a_{m+1}}\},
+        \dots,
+        \{\Tsigned{B},\Tsigned{a_n}\}\,\}
+        \]
+      }
+    \item<only@3->\normalsize
+      \alert{%
+      \(
+      a_1          \wedge \dots \wedge a_m      \wedge
+      \neg a_{m+1} \wedge \dots \wedge \neg a_n
+      \rightarrow v_B
+      \)}
+
+      \smallskip
+      gives rise to the nogood
+      \[
+      \clno{B}
+      =
+      \alert{\{\Fsigned{B},\Tsigned{a_1},\dots,\Tsigned{a_m},\Fsigned{a_{m+1}},\dots,\Fsigned{a_n}\}}
+      \]
+      \bigskip
+  \end{enumerate}
+\end{itemize}
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}{Nogoods from logic programs\\[-1ex]\normalsize via program completion}
+
+  \begin{itemize}
+  \item Analogously, the (atom-oriented) equivalence
+    \[
+    a \leftrightarrow v_{B_1} \vee \dots \vee v_{B_k}
+    \]
+    yields the nogoods
+    \begin{enumerate}
+    \item []
+    \item
+      \(
+      \ClNo{a} = \{\,\{\Fsigned{a},\Tsigned{B_1}\},\dots,\{\Fsigned{a},\Tsigned{B_k}\}\,\}
+      \)
+      and
+    \item []
+    \item
+      \(
+      \clno{a} = \{\Tsigned{a},\Fsigned{B_1},\dots,\Fsigned{B_k}\}
+      \)
+    \item []
+    \end{enumerate}
+%  \item [] where $\body{a}=\{B_1,\dots,B_k\}$ dor an atom $a\in\atom{P}$
+  \end{itemize}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{Nogoods from logic programs\\[-1ex]\normalsize atom-oriented nogoods}
+  \begin{itemize}
+  \item<1> For an atom $a$ where $\atbody{P}{a}=\{B_1,\dots,B_k\}$,
+    we get
+    \[
+    \{\Tsigned{a},\Fsigned{B_1},\dots,\Fsigned{B_k}\}
+    \quad\text{and}\quad
+    \{\,\{\Fsigned{a},\Tsigned{B_1}\},\dots,\{\Fsigned{a},\Tsigned{B_k}\}\,\}
+    \]
+  \item<2-> \structure{Example}
+    Given Atom~$x$ with $\body{x}=\{\{y\},\{\naf{z}\}\}$, we obtain
+    \arrayrulewidth=.3pt
+    \[
+    \begin{array}{|rcl|}
+      \hline
+      \only<9>{\color{red}}\only<13-14>{\color{green}}x&\leftarrow&\only<8-9,13-14>{\color{red}}y\\
+      \only<9>{\color{red}}\only<13-14>{\color{green}}x&\leftarrow&\only<8-9>{\color{red}}\only<14>{\color{green}}\naf{z}\\
+      \hline
+    \end{array}
+    \qquad\qquad
+    \begin{array}{p{5pt}l}
+      &\alert<4>{\{\Tsigned{x},\Fsigned{\{y\}},\Fsigned{\{\naf{z}\}}\}}
+      \\[2pt]
+      &\{\,\{\Fsigned{x},\Tsigned{\{y\}}\},\{\Fsigned{x},\Tsigned{\{\naf{z}\}}\}\,\}
+    \end{array}
+    \]
+  \item<3-> [] For \alert<4>{nogood}
+    \(
+    \alert<4>{\{
+      \Tsigned{\only<6-7,11-12>{\color{green}}x},
+      \Fsigned{\only<6-7,11-12>{\color{red}}\{y\}},
+      \Fsigned{\only<6-7,11-12>{\color{red}}\{\naf{z}\}}
+      \}},
+    \)
+    the signed literal
+    \begin{itemize}
+    \item<5-9> \Fsigned{\only<7,9>{\color{red}}x} is unit-resulting  wrt \alert<5>{assignment}
+      \(
+      (\Fsigned{\only<5-9>{\color{red}}{\{y\}}},\Fsigned{\only<5-9>{\color{red}}\{\naf{z}\}})
+      \)
+      and
+    \item<10-> \Tsigned{\only<12,14>{\color{green}}\{\naf{z}\}} is unit-resulting  wrt assignment
+      \(
+      (\Tsigned{\only<10-14>{\color{green}}x},\Fsigned{\only<10-14>{\color{red}}\{y\}})
+      \)
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}{Nogoods from logic programs\\[-1ex]\normalsize body-oriented nogoods}
+  \begin{itemize}
+  \item <1> For a body $B=\{a_1,\dots,a_m,\naf{a_{m+1}},\dots,\naf{a_n}\}$, %\pause,
+    we get
+    \vspace{-2pt}
+    \[
+    \begin{array}{l}
+      \{\Fsigned{B},\Tsigned{a_1},\dots,\Tsigned{a_m},\Fsigned{a_{m+1}},\dots,\Fsigned{a_n}\}
+      \\[2pt]
+      \{\,
+      \{\Tsigned{B},\Fsigned{a_1}\},
+      \dots,
+      \{\Tsigned{B},\Fsigned{a_m}\},
+      \{\Tsigned{B},\Tsigned{a_{m+1}}\},
+      \dots,
+      \{\Tsigned{B},\Tsigned{a_n}\}
+      \,\}
+    \end{array}
+  \]
+  \item<2-> \structure{Example}
+    Given Body~$\{x,\naf{y}\}$, we obtain
+    \arrayrulewidth=.3pt
+    \[
+    \begin{array}{@{}|r@{}l|}
+      \hline
+      \ldots\leftarrow{}&x,\naf{y}\\[-1.2ex]
+      &\quad\vdots\\[-3pt]
+      \ldots\leftarrow{}&x,\naf{y}\\
+      \hline
+    \end{array}
+    \quad\quad
+    \begin{array}{p{5pt}l}
+      &\{\Fsigned{\{x,\naf{y}\}},\Tsigned{x},\Fsigned{y}\}
+      \\[2pt]
+      &\{\,\{\Tsigned{\{x,\naf{y}\}},\Fsigned{x}\},\{\Tsigned{\{x,\naf{y}\}},\Tsigned{y}\}\,\}
+    \end{array}
+    \]
+  \item<3-> []
+    For nogood $\clno{\{x,\naf{y}\}}=\{\Fsigned{\{x,\naf{y}\}},\Tsigned{x},\Fsigned{y}\}$,
+    the signed literal
+    \begin{itemize}
+    \item \Tsigned{\{x,\naf{y}\}} is unit-resulting  wrt assignment $(\Tsigned{x},\Fsigned{y})$
+      and
+    \item \Tsigned{y}                    is unit-resulting  wrt assignment $(\Fsigned{\{x,\naf{y}\}},\Tsigned{x})$
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}{Characterization of stable models\\\normalsize
+  for \alert<3>{tight} logic programs\only<3>{, ie.\ \alert{free of positive recursion}}}
+\bigskip
+Let $P$ be a logic program and
+\[
+\begin{array}{lcr@{}c@{}l}
+\Delta_P
+& = &
+% \phantom{\cup\ }
+\{\clno{a} \mid a\in\atom{P}\}
+& {} \cup {} &
+\{\delta\in\ClNo{a} \mid a\in\atom{P}\}
+\\[2pt]
+& \cup &
+\{\clno{B} \mid B\in\body{P}\}
+& {} \cup {} &
+\{\delta\in\ClNo{B}\mid B\in\body{P}\}
+\end{array}
+\]
+\bigskip
+\pause
+\begin{theorem}
+Let $P$ be a \alert{tight} logic program. Then,
+
+\qquad $X\subseteq\atom{P}$ is a stable model of~$P$ \alert{iff}
+
+\qquad $X=\tlits{\ass}\cap\atom{P}$ for a (unique) solution \ass\ for $\Delta_P$
+\end{theorem}
+% \pause
+% \begin{itemize}
+% \item [\ithand] The set $\Delta_P$ of nogoods captures inferences from
+% \\  (program $P$ and) program completion
+% \end{itemize}
+\end{frame}
+% %----------------------------------------------------------------
+% \begin{frame}{Atom-oriented nogoods and tableau rules}
+
+% \begin{itemize}
+% \item Tableau rules FTA, BFA, FFA, and BTA are atom-oriented
+% \pause
+% \item
+%   For an atom $a$ such that $\body{a}=\{B_1,\dots,B_k\}$,\\ consider the equivalence:
+%   \qquad
+%   \(
+%   a \leftrightarrow v_{B_1} \vee \dots \vee v_{B_k}
+%   \)
+%   \\\mbox{~}
+% \pause
+% \item Inferences from nogoods \
+%   \(
+%   \ClNo{a}
+%   =
+%   \{\,\{\Fsigned{a},\Tsigned{B_1}\},\dots,\{\Fsigned{a},\Tsigned{B_k}\}\,\}
+%   \)\\
+%   correspond to those from tableau rules \alert{FTA} and \alert{BFA}:
+% \[
+% \begin{array}{c}
+% a \leftarrow B \\
+% \Tsigned{B} \\\hline
+% \Tsigned{a}
+% \end{array}
+% \qquad\qquad%\qquad
+% \begin{array}{c}
+% a \leftarrow B \\
+% \Fsigned{a} \\\hline
+% \Fsigned{B}
+% \end{array}
+% \]
+% % \pause
+% %   \begin{description}
+% %   \item [FTA:]
+% %     \(
+% %     (v_{B_1} \vee \dots \vee v_{B_m}) \rightarrow a
+% %     \)
+% %   \item[BFA:]
+% %     \(
+% %     \neg{a} \rightarrow (\neg{v_{B_1}} \wedge \dots \wedge \neg{v_{B_m}})
+% %     \)
+% %   \end{description}
+% %   both being equivalent to
+% %   \(
+% %   (\neg{v_{B_1}} \vee a) \wedge \dots \wedge (\neg{v_{B_m}} \vee a)
+% %   \)
+% %\newslide\mbox{}\bigskip
+% % \newpage
+% \pause
+% \item Inferences from nogood
+%   \(
+%   \clno{a}
+%   =
+%   \{\Tsigned{a},\Fsigned{B_1},\dots,\Fsigned{B_k}\}
+%   \)\\
+%   correspond to those from tableau rules \alert{FFA} and \alert{BTA}:
+% \[
+% \begin{array}[b]{c}
+% \Fsigned{B_1},\dots,\Fsigned{B_k} % &
+% % \raisebox{-8pt}[0pt][0pt]{($\body{a} = \{B_1,\dots,B_k\}$)}
+% \\\hline%{1-1}
+% \Fsigned{a}
+% \end{array}
+% \qquad\qquad%\qquad
+% \begin{array}[b]{c}
+% \Tsigned{a} \\
+% \Fsigned{B_1},\dots,\Fsigned{B_{i-1}},\Fsigned{B_{i+1}},\dots,\Fsigned{B_k} % &
+% % \raisebox{-8pt}[0pt][0pt]{($\body{a} = \{B_1,\dots,B_k\}$)}
+% \\\hline%{1-1}
+% \Tsigned{B_i}
+% \end{array}
+% \]
+% % \begin{description}
+% % \item[FFA:]
+% %     \(
+% %     (\neg{v_{B_1}} \wedge \dots \wedge \neg{v_{B_m}}) \rightarrow \neg{a}
+% %     \)
+% %   \item[BTA:]
+% %     \(
+% %     a \rightarrow (v_{B_1} \vee \dots \vee v_{B_m})
+% %     \)
+% %   \end{description}
+% %   both being equivalent to
+% %   \(
+% %   v_{B_1} \vee \dots \vee v_{B_m} \vee \neg{a}
+% %   \)
+% \end{itemize}
+% \end{frame}
+% %----------------------------------------------------------------
+% \begin{frame}{Body-oriented nogoods and tableau rules}
+
+% \begin{itemize}
+% \item Tableau rules FTB, BFB, FFB, and BTB are body-oriented
+% \pause
+% \item For a body
+%   $B=\{a_1,\dots,a_m,\naf{a_{m+1}},\dots,\naf{a_n}\}=\{l_1,\dots,l_n\}$,\\
+%   consider the equivalence:
+%   \quad
+%   \(
+%   v_{B}\leftrightarrow a_1\wedge\dots\wedge a_m\wedge \neg a_{m+1}\wedge\dots\wedge\neg a_n
+%   \)
+% \pause
+% \item Inferences from nogood
+%   \(
+%   \clno{B}
+%   =
+%   \{\Fsigned{B},\Tsigned{a_1},\dots,\Tsigned{a_m},\Fsigned{a_{m+1}},\dots,\Fsigned{a_n}\}
+%   \)\\
+%   correspond to those from tableau rules \alert{FTB} and \alert{BFB}:
+% \[
+% \begin{array}{c}
+% a \leftarrow l_1,\dots,l_n \\
+% \plit{l_1},\dots,\plit{l_n} \\\hline
+% \Tsigned{\{l_1,\dots,l_n\}}
+% \end{array}
+% \qquad\qquad%\qquad
+% \begin{array}{c}
+% \Fsigned{\{l_1,\dots,l_n\}} \\
+% \plit{l_1},\dots,\plit{l_{i-1}},\plit{l_{i+1}},\dots,\plit{l_n} \\\hline
+% \nlit{l_i}
+% \end{array}
+% \]
+% % \begin{description}
+% %   \item [FTB:]
+% %     \(
+% %     (a_1\wedge\dots\wedge a_m\wedge\neg a_{m+1}\wedge\dots\wedge\neg a_n)\rightarrow v_{B}
+% %     \)
+% %   \item[BFB:]
+% %     \(
+% %     \neg{v_{B}} \rightarrow
+% %     (\neg a_1\vee\dots\vee\neg a_m\vee a_{m+1}\vee\dots\vee a_n)
+% %     \)
+% %   \end{description}
+% %   both being equivalent to
+% %   \(
+% %   (\neg a_1\vee\dots\vee\neg a_m\vee a_{m+1}\vee\dots\vee a_n
+% %   \vee v_{B})
+% %   \)
+% %\newslide\mbox{}\bigskip
+% % \newpage
+% \pause
+% \item Inferences from nogoods
+%   \(
+%   \ClNo{B}
+%   =
+%   \{\,\{\Tsigned{B},\Fsigned{a_1}\},
+%   \dots,
+%   \{\Tsigned{B},\Fsigned{a_m}\},
+%   \{\Tsigned{B},\Tsigned{a_{m+1}}\},
+%   \dots,
+%   \{\Tsigned{B},\Tsigned{a_n}\}\,\}
+%   \)
+%   correspond to those from tableau rules \alert{FFB} and \alert{BTB}:
+% \begin{array}[b]{c}
+% a \leftarrow l_1,\dots,l_i,\dots,l_n \\
+% \nlit{l_i} \\\hline
+% \Fsigned{\{l_1,\dots,l_i,\dots,l_n\}}
+% \end{array}
+% \qquad\qquad%\qquad
+% \begin{array}[b]{c}
+% \Tsigned{\{l_1,\dots,l_i,\dots,l_n\}} \\\hline
+% \plit{l_i}
+% \end{array}
+% %   \begin{description}
+% %   \item [FFB:]
+% %     \(
+% %     (\neg a_1\vee\dots\vee\neg a_m\vee a_{m+1}\vee\dots\vee a_n)
+% %     \rightarrow \neg{v_{B}}
+% %     \)
+% %   \item [BTB:]
+% %     \(
+% %     v_{B}\rightarrow (a_1\wedge\dots\wedge a_m\wedge\neg a_{m+1}\wedge\dots\wedge\neg a_n)
+% %     \)
+% %   \end{description}
+% %   both being equivalent to
+% %     \(
+% %     (a_1 \vee \neg{v_{B}})
+% %     \wedge \dots \wedge
+% %     (a_m \vee \neg{v_{B}})
+% %     \wedge
+% %     (\neg a_{m+1} \vee \neg{v_{B}})
+% %     \wedge \dots \wedge
+% %     (\neg a_n \vee \neg{v_{B}})
+% %     \)
+% \end{itemize}
+% \end{frame}

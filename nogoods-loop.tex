@@ -1,0 +1,142 @@
+\begin{frame}{Nogoods from logic programs\\[-1ex]\normalsize via loop formulas}
+
+  Let $P$ be a normal logic program and recall that:
+  %
+  \begin{itemize}
+  \item <1->
+    For $L\subseteq\atom{P}$,
+    the external supports of $L$ for $P$ are
+    \begin{eqnarray*}
+      \ES{L}{P}
+      & = &
+      \{r\in P\mid\head{r}\in L \text{ and } \pbody{r}\cap L=\emptyset\}
+    \end{eqnarray*}
+
+  \item <2->
+    The (disjunctive) loop formula of $L$ for $P$ is
+    \begin{eqnarray*}
+      \LFM{L}{P}
+      & = &
+      \big(
+      \mbox{$\bigvee_{A\in L}$} A
+      \big)
+      \rightarrow
+      \big(
+      \mbox{$\bigvee_{r\in\ES{L}{P}}$}
+      % \comp BUGGED :)
+      {\body{r}}
+      \big)
+      \\
+      & \leftrightarrow &
+      \big(
+      % \left(
+      \mbox{$\bigwedge_{r\in\ES{L}{P}}$}
+      \neg% \comp
+      {\body{r}}
+      \big)
+      % \right)
+      \rightarrow
+      \big(
+      \mbox{$\bigwedge_{A\in L}$}\neg A
+      \big)
+    \end{eqnarray*}
+    \vspace*{-4mm}
+    \begin{itemize}
+    \item \structure{Note}
+      The loop formula of $L$ enforces
+      all atoms in~$L$ to be \emph{false}
+      \par
+      whenever $L$ is not externally supported
+    \end{itemize}
+
+  \item <3-> The external bodies of $L$ for $P$ are
+    \begin{eqnarray*}
+      \EB{L}{P} & = & \{\body{r} \mid r\in \ES{L}{P}\}
+    \end{eqnarray*}
+  \end{itemize}
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}{Nogoods from logic programs\\[-1ex]\normalsize loop nogoods} %\label{cdnl:lambda}
+  \begin{itemize}
+  \item<1->
+    For a logic program $P$ and some $\emptyset \subset U\subseteq\atom{P}$,\\
+    define the \alert{loop nogood} of an atom $a\in U$ as
+    \begin{eqnarray*}
+      \lambda(a,U)
+      & = &
+      \{\Tsigned{a},\Fsigned{B_1},\dots,\Fsigned{B_k}\}
+    \end{eqnarray*}
+    where $\EB{U}{P}=\{B_1,\dots,B_k\}$
+    \medskip
+  \item<2->
+    We get the following set of loop nogoods for $P$:
+    \begin{eqnarray*}
+      \Lambda_P
+      & = &
+      \textstyle
+      \bigcup_{\emptyset\subset U\subseteq \atom{P}}
+      \{
+      \lambda(a,U)
+      \mid
+      a\in U
+      \}
+    \end{eqnarray*}
+  \item<3->  The set $\Lambda_P$ of loop nogoods denies cyclic
+    support among \emph{true} atoms
+  \end{itemize}
+\end{frame}
+%------------------------------------------------------------
+\begin{frame}{Example}
+  \begin{itemize}
+  \item<1-> Consider the program
+    \[
+    \left\{
+      \begin{array}{l}
+        x  \leftarrow  \naf{y}\\
+        y  \leftarrow  \naf{x}
+      \end{array}
+      \
+      \begin{array}{l}
+        u  \leftarrow  x\\
+        \alert{u}  \leftarrow  \alert{v}\\
+        \alert{v}  \leftarrow  \alert{u}, y
+      \end{array}
+    \right\}
+    \]
+  \item<2-> For $u$ in the set $\{u,v\}$, we obtain the loop nogood:
+    \begin{eqnarray*}
+      \lambda(u,\{u,v\}) &=& \{\Tsigned{u},\Fsigned{\{x\}}\}
+    \end{eqnarray*}
+  \item<3-> [] Similarly for $v$ in $\{u,v\}$, we get:
+    \begin{eqnarray*}
+      \lambda(v,\{u,v\}) &=& \{\Tsigned{v},\Fsigned{\{x\}}\}
+    \end{eqnarray*}
+  \end{itemize}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{Characterization of stable models}
+\bigskip
+\begin{theorem}
+Let $P$ be a logic program. Then,
+
+\qquad $X\subseteq\atom{P}$ is a stable model of~$P$ \alert{iff}
+
+\qquad $X=\tlits{\ass}\cap\atom{P}$ for a (unique)
+solution \ass\ for $\Delta_P\cup\Lambda_P$
+\end{theorem}
+\bigskip
+\pause
+\begin{description}
+\item [Some remarks] \
+\begin{itemize}
+\item
+Nogoods in $\Lambda_P$ augment $\Delta_P$
+with conditions checking for \alert{unfounded sets},
+in particular,
+those being loops
+\item
+While $|\Delta_P|$ is linear in the size of $P$,
+$\Lambda_P$ may contain \alert{exponentially many} (non-redundant) loop nogoods
+\end{itemize}
+\end{description}
+\end{frame}

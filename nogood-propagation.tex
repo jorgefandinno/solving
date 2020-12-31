@@ -62,8 +62,8 @@ P
 & = &
 \left\{
   \begin{array}{l}
-x  \leftarrow  \naf{y}\\%[-3pt]
-y  \leftarrow  \naf{x}
+x  \leftarrow  \neg y\\%[-3pt]
+y  \leftarrow  \neg x
 \end{array}
 \
 \begin{array}{l}
@@ -77,7 +77,7 @@ v  \leftarrow u,y%\\%[-3pt]
 \end{array}
 \
 \begin{array}{l}
-w  \leftarrow \naf{x},\naf{y}\\
+w  \leftarrow \neg x,\neg y\\
 \mbox{~}
 \end{array}
 \right\}
@@ -91,23 +91,23 @@ w  \leftarrow \naf{x},\naf{y}\\
 \\\hline\hline
 1 & \Tsigned{u} & &
 \\\hline
-2 & \Fsigned{\{\naf{x},\naf{y}\}} & &
+2 & \Fsigned{\{\neg x,\neg y\}} & &
 \\
-  & & \Fsigned{w}     & \{\Tsigned{w},\Fsigned{\{\naf{x},\naf{y}\}}\}=\clno{w}
+  & & \Fsigned{w}     & \{\Tsigned{w},\Fsigned{\{\neg x,\neg y\}}\}=\clno{w}
 \\\hline
-3 & \Fsigned{\{\naf{y}\}} & &
+3 & \Fsigned{\{\neg y\}} & &
 \\
-  & & \Fsigned{x}     & \{\Tsigned{x},\Fsigned{\{\naf{y}\}}\}=\clno{x}
+  & & \Fsigned{x}     & \{\Tsigned{x},\Fsigned{\{\neg y\}}\}=\clno{x}
 \\
   & & \Fsigned{\{x\}} & \{\Tsigned{\{x\}},\Fsigned{x}\}\in\ClNo{\{x\}}
 \\
   & & \Fsigned{\{x,y\}} & \{\Tsigned{\{x,y\}},\Fsigned{x}\}\in\ClNo{\{x,y\}}
 \\
-  & & \Tsigned{\{\naf{x}\}} & \{\Fsigned{\{\naf{x}\}},\Fsigned{x}\}=\clno{\{\naf{x}\}}
+  & & \Tsigned{\{\neg x\}} & \{\Fsigned{\{\neg x\}},\Fsigned{x}\}=\clno{\{\neg x\}}
 \\
-  & & \Tsigned{y} & \{\Fsigned{\{\naf{y}\}},\Fsigned{y}\}=\clno{\{\naf{y}\}}
+  & & \Tsigned{y} & \{\Fsigned{\{\neg y\}},\Fsigned{y}\}=\clno{\{\neg y\}}
 \\
-%   & & \Fsigned{\{\naf{x},\naf{y}\}} & \{\Tsigned{\{\naf{x},\naf{y}\}},\Tsigned{y}\}\in\ClNo{\{\naf{x},\naf{y}\}}
+%   & & \Fsigned{\{\neg x,\neg y\}} & \{\Tsigned{\{\neg x,\neg y\}},\Tsigned{y}\}\in\ClNo{\{\neg x,\neg y\}}
 % \\
   & & \Tsigned{\{v\}} & \{\Tsigned{u},\Fsigned{\{x,y\}},\Fsigned\{v\}\}=\clno{u}
 \\

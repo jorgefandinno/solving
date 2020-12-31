@@ -10,7 +10,7 @@ The completion of a logic program $P$ can be defined as follows:
   \neg a_{m+1} \wedge \dots \wedge \neg a_n \mid
   \\&&\qquad\quad
   B \in\body{P} \text{ and }
-  B = \{a_1,\dots,a_m,\naf{a_{m+1}},\dots,\naf{a_n}\}
+  B = \{a_1,\dots,a_m,\neg a_{m+1},\dots,\neg a_n\}
   \}
   \\[6pt]
   &\cup&
@@ -30,7 +30,7 @@ where $\atbody{P}{a}=\{\body{r}\mid r\in P\text{ and }\head{r}=a\}$
 \begin{frame}{Nogoods from logic programs\\[-1ex]\normalsize via program completion}
 
   \begin{itemize}
-%  \item<1-> Let $B=\{a_1,\dots,a_m,\naf{a_{m+1}},\dots,\naf{a_n}\}$ be a body
+%  \item<1-> Let $B=\{a_1,\dots,a_m,\neg a_{m+1},\dots,\neg a_n\}$ be a body
   \item<1-> The (body-oriented) equivalence
     \[
     v_B \leftrightarrow
@@ -129,20 +129,20 @@ where $\atbody{P}{a}=\{\body{r}\mid r\in P\text{ and }\head{r}=a\}$
     \{\,\{\Fsigned{a},\Tsigned{B_1}\},\dots,\{\Fsigned{a},\Tsigned{B_k}\}\,\}
     \]
   \item<2-> \structure{Example}
-    Given Atom~$x$ with $\body{x}=\{\{y\},\{\naf{z}\}\}$, we obtain
+    Given Atom~$x$ with $\body{x}=\{\{y\},\{\neg z\}\}$, we obtain
     \arrayrulewidth=.3pt
     \[
     \begin{array}{|rcl|}
       \hline
       \only<9>{\color{red}}\only<13-14>{\color{green}}x&\leftarrow&\only<8-9,13-14>{\color{red}}y\\
-      \only<9>{\color{red}}\only<13-14>{\color{green}}x&\leftarrow&\only<8-9>{\color{red}}\only<14>{\color{green}}\naf{z}\\
+      \only<9>{\color{red}}\only<13-14>{\color{green}}x&\leftarrow&\only<8-9>{\color{red}}\only<14>{\color{green}}\neg z\\
       \hline
     \end{array}
     \qquad\qquad
     \begin{array}{p{5pt}l}
-      &\alert<4>{\{\Tsigned{x},\Fsigned{\{y\}},\Fsigned{\{\naf{z}\}}\}}
+      &\alert<4>{\{\Tsigned{x},\Fsigned{\{y\}},\Fsigned{\{\neg z\}}\}}
       \\[2pt]
-      &\{\,\{\Fsigned{x},\Tsigned{\{y\}}\},\{\Fsigned{x},\Tsigned{\{\naf{z}\}}\}\,\}
+      &\{\,\{\Fsigned{x},\Tsigned{\{y\}}\},\{\Fsigned{x},\Tsigned{\{\neg z\}}\}\,\}
     \end{array}
     \]
   \item<3-> [] For \alert<4>{nogood}
@@ -150,17 +150,17 @@ where $\atbody{P}{a}=\{\body{r}\mid r\in P\text{ and }\head{r}=a\}$
     \alert<4>{\{
       \Tsigned{\only<6-7,11-12>{\color{green}}x},
       \Fsigned{\only<6-7,11-12>{\color{red}}\{y\}},
-      \Fsigned{\only<6-7,11-12>{\color{red}}\{\naf{z}\}}
+      \Fsigned{\only<6-7,11-12>{\color{red}}\{\neg z\}}
       \}},
     \)
     the signed literal
     \begin{itemize}
     \item<5-9> \Fsigned{\only<7,9>{\color{red}}x} is unit-resulting  wrt \alert<5>{assignment}
       \(
-      (\Fsigned{\only<5-9>{\color{red}}{\{y\}}},\Fsigned{\only<5-9>{\color{red}}\{\naf{z}\}})
+      (\Fsigned{\only<5-9>{\color{red}}{\{y\}}},\Fsigned{\only<5-9>{\color{red}}\{\neg z\}})
       \)
       and
-    \item<10-> \Tsigned{\only<12,14>{\color{green}}\{\naf{z}\}} is unit-resulting  wrt assignment
+    \item<10-> \Tsigned{\only<12,14>{\color{green}}\{\neg z\}} is unit-resulting  wrt assignment
       \(
       (\Tsigned{\only<10-14>{\color{green}}x},\Fsigned{\only<10-14>{\color{red}}\{y\}})
       \)
@@ -170,7 +170,7 @@ where $\atbody{P}{a}=\{\body{r}\mid r\in P\text{ and }\head{r}=a\}$
 %------------------------------------------------------------
 \begin{frame}{Nogoods from logic programs\\[-1ex]\normalsize body-oriented nogoods}
   \begin{itemize}
-  \item <1> For a body $B=\{a_1,\dots,a_m,\naf{a_{m+1}},\dots,\naf{a_n}\}$, %\pause,
+  \item <1> For a body $B=\{a_1,\dots,a_m,\neg a_{m+1},\dots,\neg a_n\}$, %\pause,
     we get
     \vspace{-2pt}
     \[
@@ -188,30 +188,30 @@ where $\atbody{P}{a}=\{\body{r}\mid r\in P\text{ and }\head{r}=a\}$
     \end{array}
   \]
   \item<2-> \structure{Example}
-    Given Body~$\{x,\naf{y}\}$, we obtain
+    Given Body~$\{x,\neg y\}$, we obtain
     \arrayrulewidth=.3pt
     \[
     \begin{array}{@{}|r@{}l|}
       \hline
-      \ldots\leftarrow{}&x,\naf{y}\\[-1.2ex]
+      \ldots\leftarrow{}&x,\neg y\\[-1.2ex]
       &\quad\vdots\\[-3pt]
-      \ldots\leftarrow{}&x,\naf{y}\\
+      \ldots\leftarrow{}&x,\neg y\\
       \hline
     \end{array}
     \quad\quad
     \begin{array}{p{5pt}l}
-      &\{\Fsigned{\{x,\naf{y}\}},\Tsigned{x},\Fsigned{y}\}
+      &\{\Fsigned{\{x,\neg y\}},\Tsigned{x},\Fsigned{y}\}
       \\[2pt]
-      &\{\,\{\Tsigned{\{x,\naf{y}\}},\Fsigned{x}\},\{\Tsigned{\{x,\naf{y}\}},\Tsigned{y}\}\,\}
+      &\{\,\{\Tsigned{\{x,\neg y\}},\Fsigned{x}\},\{\Tsigned{\{x,\neg y\}},\Tsigned{y}\}\,\}
     \end{array}
     \]
   \item<3-> []
-    For nogood $\clno{\{x,\naf{y}\}}=\{\Fsigned{\{x,\naf{y}\}},\Tsigned{x},\Fsigned{y}\}$,
+    For nogood $\clno{\{x,\neg y\}}=\{\Fsigned{\{x,\neg y\}},\Tsigned{x},\Fsigned{y}\}$,
     the signed literal
     \begin{itemize}
-    \item \Tsigned{\{x,\naf{y}\}} is unit-resulting  wrt assignment $(\Tsigned{x},\Fsigned{y})$
+    \item \Tsigned{\{x,\neg y\}} is unit-resulting  wrt assignment $(\Tsigned{x},\Fsigned{y})$
       and
-    \item \Tsigned{y}                    is unit-resulting  wrt assignment $(\Fsigned{\{x,\naf{y}\}},\Tsigned{x})$
+    \item \Tsigned{y}                    is unit-resulting  wrt assignment $(\Fsigned{\{x,\neg y\}},\Tsigned{x})$
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -348,7 +348,7 @@ Let $P$ be a \alert{tight} logic program. Then,
 % \item Tableau rules FTB, BFB, FFB, and BTB are body-oriented
 % \pause
 % \item For a body
-%   $B=\{a_1,\dots,a_m,\naf{a_{m+1}},\dots,\naf{a_n}\}=\{l_1,\dots,l_n\}$,\\
+%   $B=\{a_1,\dots,a_m,\neg a_{m+1},\dots,\neg a_n\}=\{l_1,\dots,l_n\}$,\\
 %   consider the equivalence:
 %   \quad
 %   \(

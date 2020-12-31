@@ -45,8 +45,8 @@ P
 & = &
 \left\{
   \begin{array}{l}
-x  \leftarrow  \naf{y}\\%[-3pt]
-y  \leftarrow  \naf{x}
+x  \leftarrow  \neg y\\%[-3pt]
+y  \leftarrow  \neg x
 \end{array}
 \
 \begin{array}{l}
@@ -60,7 +60,7 @@ v  \leftarrow u,y%\\%[-3pt]
 \end{array}
 \
 \begin{array}{l}
-w  \leftarrow \naf{x},\naf{y}\\
+w  \leftarrow \neg x,\neg y\\
 \mbox{~}
 \end{array}
 \right\}
@@ -74,24 +74,24 @@ w  \leftarrow \naf{x},\naf{y}\\
 \\\cline{1-4}\cline{1-4}
 1 & \alert<2,5,8>{\Tsigned{u}} & &
 \\\cline{1-4}
-2 & \Fsigned{\{\naf{x},\naf{y}\}} & &
+2 & \Fsigned{\{\neg x,\neg y\}} & &
 \\
-  & & \Fsigned{w}     & \{\Tsigned{w},\Fsigned{\{\naf{x},\naf{y}\}}\}=\clno{w}
+  & & \Fsigned{w}     & \{\Tsigned{w},\Fsigned{\{\neg x,\neg y\}}\}=\clno{w}
 \\\cline{1-4}
-3 & \Fsigned{\{\naf{y}\}} & &
+3 & \Fsigned{\{\neg y\}} & &
 \\
-  & & \alert<5-6,8-9>{\Fsigned{x}}     & \{\Tsigned{x},\Fsigned{\{\naf{y}\}}\}=\clno{x}
+  & & \alert<5-6,8-9>{\Fsigned{x}}     & \{\Tsigned{x},\Fsigned{\{\neg y\}}\}=\clno{x}
 \\
   & & \alert<2-3,5-6>{\Fsigned{\{x\}}} & \{\alert<7>{\Tsigned{\{x\}}},\alert<8>{\Fsigned{x}}\}\in\ClNo{\{x\}}
 & \onslide<8->{\alert<8,10>{\{\Tsigned{u},\alert<9>{\Fsigned{x}}\}}}
 \\
   & & \alert<2-3>{\Fsigned{\{x,y\}}} & \{\alert<4>{\Tsigned{\{x,y\}}},\alert<5>{\Fsigned{x}}\}\in\ClNo{\{x,y\}} & \onslide<5->{\alert<5>{\{\alert<8>{\Tsigned{u}},\alert<6,8>{\Fsigned{x}},\alert<6-7>{\Fsigned{\{x\}}}\}}}
 \\
-  & & \Tsigned{\{\naf{x}\}} & \{\Fsigned{\{\naf{x}\}},\Fsigned{x}\}=\clno{\{\naf{x}\}}
+  & & \Tsigned{\{\neg x\}} & \{\Fsigned{\{\neg x\}},\Fsigned{x}\}=\clno{\{\neg x\}}
 \\
-  & & \Tsigned{y} & \{\Fsigned{\{\naf{y}\}},\Fsigned{y}\}=\clno{\{\naf{y}\}}
+  & & \Tsigned{y} & \{\Fsigned{\{\neg y\}},\Fsigned{y}\}=\clno{\{\neg y\}}
 \\
-%   & & \Fsigned{\{\naf{x},\naf{y}\}} & \{\Tsigned{\{\naf{x},\naf{y}\}},\Tsigned{y}\}\in\ClNo{\{\naf{x},\naf{y}\}}
+%   & & \Fsigned{\{\neg x,\neg y\}} & \{\Tsigned{\{\neg x,\neg y\}},\Tsigned{y}\}\in\ClNo{\{\neg x,\neg y\}}
 % \\
   & & \Tsigned{\{v\}} & \{\Tsigned{u},\Fsigned{\{x,y\}},\Fsigned\{v\}\}=\clno{u}
 \\

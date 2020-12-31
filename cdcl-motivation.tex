@@ -1,30 +1,32 @@
+% ----------------------------------------------------------------------
 \begin{frame}{Towards conflict-driven search}
-  \bigskip
-  Boolean constraint solving algorithms pioneered for SAT led to:
   \medskip
-  \begin{itemize}\itemsep -1pt
+  Boolean constraint solving algorithms pioneered for SAT led to
+  \smallskip
+  \begin{itemize}
   \item<1-> \structure{Traditional DPLL-style approach}
   \item<1-> [] \structure{\footnotesize (DPLL stands for `Davis-Putnam-Logemann-Loveland')}
-    \begin{itemize}
-    \item (Unit) propagation
-    \item (Chronological) backtracking
-    \medskip
+    \begin{itemize}\normalsize
+    \item Unit propagation
+    \item Backtracking
+    \smallskip
     \item in ASP, eg \smodels\
     \end{itemize}
-  \bigskip
+  \medskip
   \item<1-> \structure{Modern CDCL-style approach}
   \item<1-> [] \structure{\footnotesize (CDCL stands for `Conflict-Driven Constraint Learning')}
-    \begin{itemize}
-    \item (Unit) propagation
+    \begin{itemize}\normalsize
+    \item Unit propagation
     \item Conflict analysis (via resolution)
     \item Learning + Backjumping + Assertion
-    \medskip
+    \smallskip
     \item in ASP, eg \clasp\
     \end{itemize}
   \end{itemize}
 \end{frame}
+% ----------------------------------------------------------------------
 %
 %%% Local Variables:
 %%% mode: latex
-%%% TeX-master: "../asp"
+%%% TeX-master: "../../main"
 %%% End:

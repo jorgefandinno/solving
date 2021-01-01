@@ -36,49 +36,76 @@
 \end{frame}
 % ----------------------------------------------------------------------
 \begin{frame}{Nogoods and solutions}
+  \bigskip
   \begin{itemize}
-  \item A \alert{nogood} is a set $\{\sigma_1,\ldots,\sigma_n\}$ of
-    signed literals,
-
-    expressing a \alert{constraint} violated by any assignment
-    \\
-    containing $\sigma_1,\ldots,\sigma_n$
-  \item Alternatively, it represents a partial assignment
-    that canot be extended to a solution
-  \item<2-> An assignment \ass\ such that
-    \(
-    \tlits{\ass} \cup \flits{\ass}
-    =
-    \domain{\ass}
-    \)
-    and
-    \(
-    \tlits{\ass} \cap \flits{\ass}
-    =
-    \emptyset
-    \)
-
+  \item<2-> A \alert{nogood} is a set $\{\sigma_1,\ldots,\sigma_n\}$ of signed literals\only<3-4>{,}
+    \begin{itemize}\normalsize
+    \item<only@3-5> expressing a \alert{constraint} violated by any assignment
+      \\containing $\sigma_1,\ldots,\sigma_n$, or
+    \item<only@3-5> alternatively, representing a partial assignment that
+      \\cannot be extended to a solution
+      \medskip
+    \end{itemize}
+  \item<only@4 > \structure{Example} \ $\{\Tsigned{a},\Fsigned{b}\}$
+    is violated by any assignment containing
+    \\ both \Tsigned{a} and \Fsigned{b}
+    \par\smallskip
+    That is, no such assignment can be extended to a solution
+  \item<only@5-> An assignment \ass\ such that
+    \par\smallskip
+    \begin{itemize}\normalsize
+    \item \( \tlits{\ass} \cup \flits{\ass} = \domain{\ass} \) \ and
+      \smallskip
+    \item \( \tlits{\ass} \cap \flits{\ass} = \emptyset \)
+    \end{itemize}
+    \par\smallskip
     is a \alert{solution} for a set~$\Delta$ of nogoods,
     if
-    $\delta\not\subseteq\ass$ for all $\delta\in\Delta$
+    \par\smallskip
+    \begin{itemize}\normalsize
+    \item $\delta\not\subseteq\ass$ \ for all $\delta\in\Delta$
+    \end{itemize}
+    \bigskip
+  \item<only@7- > \structure{Example} \ \alt<8>{$\{\Fsigned{a},\Fsigned{b}\}$}{$\{\Tsigned{a},\Tsigned{b}\}$}
+    is \alt<8>{no}{a} solution for
+    \(
+    \{\,\{\Tsigned{a},\Fsigned{b}\},\{\Fsigned{a},\Tsigned{b}\},\{\Fsigned{b}\}\,\}
+    \)
   \end{itemize}
 \end{frame}
 % ----------------------------------------------------------------------
 \begin{frame}{Unit propagation}
+  \bigskip
   \begin{itemize}
-  \item<3-> For a nogood $\delta$, a literal $\sigma\in\delta$, and an assignment \ass,
-    we say that\\
+  \item<2-> For a nogood $\delta$, a literal $\sigma\in\delta$, and an assignment \ass,
+    \par\smallskip
     \alert{$\overline{\sigma}$} is \alert{unit-resulting} for~$\delta$ wrt \ass,
     if
-    \begin{enumerate}
+    \par\smallskip
+    \begin{itemize}\normalsize
     \item $\delta\setminus\ass=\{\sigma\}$
-      and
+      \ and
+    \par\smallskip
     \item $\overline{\sigma}\not\in\ass$
-    \end{enumerate}
-  \item<4-> For a set $\Delta$ of nogoods and an assignment~\ass,
-    \alert{unit propagation} is the iterated process of extending \ass\ with
-    unit-resulting literals until no further literal is unit-resulting for any
-    nogood in $\Delta$
+    \end{itemize}
+    \smallskip
+  \item<3-> For a set $\Delta$ of nogoods and an assignment~\ass,
+    \alert{unit propagation} is
+
+    the iterated process of extending \ass\ with unit-resulting literals
+
+    until no further literal is unit-resulting for any nogood in $\Delta$
+    \medskip
+  \item<only@4-> \structure{Example} \
+    \(
+    \{\,\{\Tsigned{a},\Fsigned{b}\},\{\Fsigned{a},\Tsigned{b}\},\{\Fsigned{b}\}\,\}
+    \)
+    \begin{itemize}\normalsize
+    \item<     5-> \Tsigned{b} is     unit-resulting for $\{\Fsigned{b}\}$ wrt $\emptyset$
+    \item<     6-> \Tsigned{a} is     unit-resulting for $\{\Fsigned{a},\Tsigned{b}\}$ wrt $\{\Tsigned{b}\}$
+      \smallskip
+    \item<only@7-> \Tsigned{b} is not unit-resulting for $\{\Tsigned{a},\Fsigned{b}\}$ wrt $\{\Tsigned{b},\Tsigned{a}\}$
+    \end{itemize}
   \end{itemize}
 \end{frame}
 % ----------------------------------------------------------------------

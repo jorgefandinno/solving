@@ -1,4 +1,5 @@
-\begin{frame}[c]{Nogoods from logic programs\\[-1ex]\normalsize via program completion}
+% ----------------------------------------------------------------------
+\begin{frame}{Nogoods from logic programs}{via program completion}
 
 The completion of a logic program $P$ can be defined as follows:
 %
@@ -27,7 +28,7 @@ The completion of a logic program $P$ can be defined as follows:
 where $\atbody{P}{a}=\{\body{r}\mid r\in P\text{ and }\head{r}=a\}$
 \end{frame}
 %------------------------------------------------------------
-\begin{frame}{Nogoods from logic programs\\[-1ex]\normalsize via program completion}
+\begin{frame}{Nogoods from logic programs}{via program completion}
 
   \begin{itemize}
 %  \item<1-> Let $B=\{a_1,\dots,a_m,\neg a_{m+1},\dots,\neg a_n\}$ be a body
@@ -93,7 +94,7 @@ where $\atbody{P}{a}=\{\body{r}\mid r\in P\text{ and }\head{r}=a\}$
 \end{itemize}
 \end{frame}
 %------------------------------------------------------------
-\begin{frame}{Nogoods from logic programs\\[-1ex]\normalsize via program completion}
+\begin{frame}{Nogoods from logic programs}{via program completion}
 
   \begin{itemize}
   \item Analogously, the (atom-oriented) equivalence
@@ -119,7 +120,7 @@ where $\atbody{P}{a}=\{\body{r}\mid r\in P\text{ and }\head{r}=a\}$
   \end{itemize}
 \end{frame}
 % ------------------------------------------------------------
-\begin{frame}{Nogoods from logic programs\\[-1ex]\normalsize atom-oriented nogoods}
+\begin{frame}{Nogoods from logic programs}{atom-oriented nogoods}
   \begin{itemize}
   \item<1> For an atom $a$ where $\atbody{P}{a}=\{B_1,\dots,B_k\}$,
     we get
@@ -128,7 +129,7 @@ where $\atbody{P}{a}=\{\body{r}\mid r\in P\text{ and }\head{r}=a\}$
     \quad\text{and}\quad
     \{\,\{\Fsigned{a},\Tsigned{B_1}\},\dots,\{\Fsigned{a},\Tsigned{B_k}\}\,\}
     \]
-  \item<2-> \structure{Example}
+  \item<2-> \structure{Example} \
     Given Atom~$x$ with $\body{x}=\{\{y\},\{\neg z\}\}$, we obtain
     \arrayrulewidth=.3pt
     \[
@@ -168,7 +169,7 @@ where $\atbody{P}{a}=\{\body{r}\mid r\in P\text{ and }\head{r}=a\}$
   \end{itemize}
 \end{frame}
 %------------------------------------------------------------
-\begin{frame}{Nogoods from logic programs\\[-1ex]\normalsize body-oriented nogoods}
+\begin{frame}{Nogoods from logic programs}{body-oriented nogoods}
   \begin{itemize}
   \item <1> For a body $B=\{a_1,\dots,a_m,\neg a_{m+1},\dots,\neg a_n\}$, %\pause,
     we get
@@ -187,7 +188,7 @@ where $\atbody{P}{a}=\{\body{r}\mid r\in P\text{ and }\head{r}=a\}$
       \,\}
     \end{array}
   \]
-  \item<2-> \structure{Example}
+  \item<2-> \structure{Example} \
     Given Body~$\{x,\neg y\}$, we obtain
     \arrayrulewidth=.3pt
     \[
@@ -216,8 +217,7 @@ where $\atbody{P}{a}=\{\body{r}\mid r\in P\text{ and }\head{r}=a\}$
   \end{itemize}
 \end{frame}
 %------------------------------------------------------------
-\begin{frame}{Characterization of stable models\\\normalsize
-  for \alert<3>{tight} logic programs\only<3>{, ie.\ \alert{free of positive recursion}}}
+\begin{frame}{Characterization of stable models}{for \alert<3>{tight} logic programs\only<3>{, ie.\ \alert{free of positive recursion}}}
 \bigskip
 Let $P$ be a logic program and
 \[

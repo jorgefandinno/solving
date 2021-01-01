@@ -1,0 +1,189 @@
+% %----------------------------------------------------------------
+% \begin{frame}{Atom-oriented nogoods and tableau rules}
+
+% \begin{itemize}
+% \item Tableau rules FTA, BFA, FFA, and BTA are atom-oriented
+% \pause
+% \item
+%   For an atom $a$ such that $\body{a}=\{B_1,\dots,B_k\}$,\\ consider the equivalence:
+%   \qquad
+%   \(
+%   a \leftrightarrow v_{B_1} \vee \dots \vee v_{B_k}
+%   \)
+%   \\\mbox{~}
+% \pause
+% \item Inferences from nogoods \
+%   \(
+%   \ClNo{a}
+%   =
+%   \{\,\{\Fsigned{a},\Tsigned{B_1}\},\dots,\{\Fsigned{a},\Tsigned{B_k}\}\,\}
+%   \)\\
+%   correspond to those from tableau rules \alert{FTA} and \alert{BFA}:
+% \[
+% \begin{array}{c}
+% a \leftarrow B \\
+% \Tsigned{B} \\\hline
+% \Tsigned{a}
+% \end{array}
+% \qquad\qquad%\qquad
+% \begin{array}{c}
+% a \leftarrow B \\
+% \Fsigned{a} \\\hline
+% \Fsigned{B}
+% \end{array}
+% \]
+% % \pause
+% %   \begin{description}
+% %   \item [FTA:]
+% %     \(
+% %     (v_{B_1} \vee \dots \vee v_{B_m}) \rightarrow a
+% %     \)
+% %   \item[BFA:]
+% %     \(
+% %     \neg{a} \rightarrow (\neg{v_{B_1}} \wedge \dots \wedge \neg{v_{B_m}})
+% %     \)
+% %   \end{description}
+% %   both being equivalent to
+% %   \(
+% %   (\neg{v_{B_1}} \vee a) \wedge \dots \wedge (\neg{v_{B_m}} \vee a)
+% %   \)
+% %\newslide\mbox{}\bigskip
+% % \newpage
+% \pause
+% \item Inferences from nogood
+%   \(
+%   \clno{a}
+%   =
+%   \{\Tsigned{a},\Fsigned{B_1},\dots,\Fsigned{B_k}\}
+%   \)\\
+%   correspond to those from tableau rules \alert{FFA} and \alert{BTA}:
+% \[
+% \begin{array}[b]{c}
+% \Fsigned{B_1},\dots,\Fsigned{B_k} % &
+% % \raisebox{-8pt}[0pt][0pt]{($\body{a} = \{B_1,\dots,B_k\}$)}
+% \\\hline%{1-1}
+% \Fsigned{a}
+% \end{array}
+% \qquad\qquad%\qquad
+% \begin{array}[b]{c}
+% \Tsigned{a} \\
+% \Fsigned{B_1},\dots,\Fsigned{B_{i-1}},\Fsigned{B_{i+1}},\dots,\Fsigned{B_k} % &
+% % \raisebox{-8pt}[0pt][0pt]{($\body{a} = \{B_1,\dots,B_k\}$)}
+% \\\hline%{1-1}
+% \Tsigned{B_i}
+% \end{array}
+% \]
+% % \begin{description}
+% % \item[FFA:]
+% %     \(
+% %     (\neg{v_{B_1}} \wedge \dots \wedge \neg{v_{B_m}}) \rightarrow \neg{a}
+% %     \)
+% %   \item[BTA:]
+% %     \(
+% %     a \rightarrow (v_{B_1} \vee \dots \vee v_{B_m})
+% %     \)
+% %   \end{description}
+% %   both being equivalent to
+% %   \(
+% %   v_{B_1} \vee \dots \vee v_{B_m} \vee \neg{a}
+% %   \)
+% \end{itemize}
+% \end{frame}
+% %----------------------------------------------------------------
+% \begin{frame}{Body-oriented nogoods and tableau rules}
+
+% \begin{itemize}
+% \item Tableau rules FTB, BFB, FFB, and BTB are body-oriented
+% \pause
+% \item For a body
+%   $B=\{a_1,\dots,a_m,\neg a_{m+1},\dots,\neg a_n\}=\{l_1,\dots,l_n\}$,\\
+%   consider the equivalence:
+%   \quad
+%   \(
+%   v_{B}\leftrightarrow a_1\wedge\dots\wedge a_m\wedge \neg a_{m+1}\wedge\dots\wedge\neg a_n
+%   \)
+% \pause
+% \item Inferences from nogood
+%   \(
+%   \clno{B}
+%   =
+%   \{\Fsigned{B},\Tsigned{a_1},\dots,\Tsigned{a_m},\Fsigned{a_{m+1}},\dots,\Fsigned{a_n}\}
+%   \)\\
+%   correspond to those from tableau rules \alert{FTB} and \alert{BFB}:
+% \[
+% \begin{array}{c}
+% a \leftarrow l_1,\dots,l_n \\
+% \plit{l_1},\dots,\plit{l_n} \\\hline
+% \Tsigned{\{l_1,\dots,l_n\}}
+% \end{array}
+% \qquad\qquad%\qquad
+% \begin{array}{c}
+% \Fsigned{\{l_1,\dots,l_n\}} \\
+% \plit{l_1},\dots,\plit{l_{i-1}},\plit{l_{i+1}},\dots,\plit{l_n} \\\hline
+% \nlit{l_i}
+% \end{array}
+% \]
+% % \begin{description}
+% %   \item [FTB:]
+% %     \(
+% %     (a_1\wedge\dots\wedge a_m\wedge\neg a_{m+1}\wedge\dots\wedge\neg a_n)\rightarrow v_{B}
+% %     \)
+% %   \item[BFB:]
+% %     \(
+% %     \neg{v_{B}} \rightarrow
+% %     (\neg a_1\vee\dots\vee\neg a_m\vee a_{m+1}\vee\dots\vee a_n)
+% %     \)
+% %   \end{description}
+% %   both being equivalent to
+% %   \(
+% %   (\neg a_1\vee\dots\vee\neg a_m\vee a_{m+1}\vee\dots\vee a_n
+% %   \vee v_{B})
+% %   \)
+% %\newslide\mbox{}\bigskip
+% % \newpage
+% \pause
+% \item Inferences from nogoods
+%   \(
+%   \ClNo{B}
+%   =
+%   \{\,\{\Tsigned{B},\Fsigned{a_1}\},
+%   \dots,
+%   \{\Tsigned{B},\Fsigned{a_m}\},
+%   \{\Tsigned{B},\Tsigned{a_{m+1}}\},
+%   \dots,
+%   \{\Tsigned{B},\Tsigned{a_n}\}\,\}
+%   \)
+%   correspond to those from tableau rules \alert{FFB} and \alert{BTB}:
+% \begin{array}[b]{c}
+% a \leftarrow l_1,\dots,l_i,\dots,l_n \\
+% \nlit{l_i} \\\hline
+% \Fsigned{\{l_1,\dots,l_i,\dots,l_n\}}
+% \end{array}
+% \qquad\qquad%\qquad
+% \begin{array}[b]{c}
+% \Tsigned{\{l_1,\dots,l_i,\dots,l_n\}} \\\hline
+% \plit{l_i}
+% \end{array}
+% %   \begin{description}
+% %   \item [FFB:]
+% %     \(
+% %     (\neg a_1\vee\dots\vee\neg a_m\vee a_{m+1}\vee\dots\vee a_n)
+% %     \rightarrow \neg{v_{B}}
+% %     \)
+% %   \item [BTB:]
+% %     \(
+% %     v_{B}\rightarrow (a_1\wedge\dots\wedge a_m\wedge\neg a_{m+1}\wedge\dots\wedge\neg a_n)
+% %     \)
+% %   \end{description}
+% %   both being equivalent to
+% %     \(
+% %     (a_1 \vee \neg{v_{B}})
+% %     \wedge \dots \wedge
+% %     (a_m \vee \neg{v_{B}})
+% %     \wedge
+% %     (\neg a_{m+1} \vee \neg{v_{B}})
+% %     \wedge \dots \wedge
+% %     (\neg a_n \vee \neg{v_{B}})
+% %     \)
+% \end{itemize}
+% \end{frame}

@@ -1,3 +1,4 @@
+% ----------------------------------------------------------------------
 \begin{frame}{Outline of {NogoodPropagation}}
 \begin{itemize}
 \item Derive deterministic consequences via:
@@ -7,7 +8,7 @@
   \end{itemize}
 \item Note that $U$ is \alert{unfounded} if $\EB{U}{P}\subseteq\flits{\ass}$
   \begin{itemize}
-  \item \structure{Note} For any $a\in U$, we have $(\lambda(a,U)\setminus\{\Tsigned{a}\})\subseteq\ass$
+  \item \structure{Note} \  For any $a\in U$, we have $(\lambda(a,U)\setminus\{\Tsigned{a}\})\subseteq\ass$
   \end{itemize}
 \pause
 \item An ``interesting'' unfounded set~$U$ satisfies:
@@ -18,19 +19,19 @@
 \pause
       such an unfounded set contains some loop of~$P$
   \begin{itemize}
-  \item \structure{Note} Tight programs do not yield ``interesting'' unfounded sets !
+  \item \structure{Note} \  Tight programs do not yield ``interesting'' unfounded sets !
   \end{itemize}
 \pause
 \item Given an unfounded set $U$ and some $a\in U$,
       adding $\lambda(a,U)$ to $\nabla$ triggers a conflict or
       further derivations by unit propagation
   \begin{itemize}
-  \item \structure{Note} Add loop nogoods atom by atom to eventually falsify all $a\in U$
+  \item \structure{Note} \  Add loop nogoods atom by atom to eventually falsify all $a\in U$
   \end{itemize}
 \end{itemize}
 \end{frame}
 %------------------------------------------------------------
-\begin{frame}[c]
+\begin{frame}
 \SetAlFnt{\tiny}
 \input{solving/algorithms/algo_unit_propagation}
 \end{frame}
@@ -121,8 +122,8 @@ w  \leftarrow \neg x,\neg y\\
 ~\raisebox{1mm}{\KO}
 \]
 \end{frame}
-%------------------------------------------------------------
-
+% ----------------------------------------------------------------------
+%
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "../../main"

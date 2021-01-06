@@ -1,33 +1,33 @@
 % ----------------------------------------------------------------------
 \begin{frame}{Nogoods from logic programs}{via program completion}
-
-The completion of a logic program $P$ can be defined as follows:
-%
-\begin{eqnarray*}
-  &&
-  \{
-  v_B \leftrightarrow
-  a_1          \wedge \dots \wedge a_m      \wedge
-  \neg a_{m+1} \wedge \dots \wedge \neg a_n \mid
-  \\&&\qquad\quad
-  B \in\body{P} \text{ and }
-  B = \{a_1,\dots,a_m,\neg a_{m+1},\dots,\neg a_n\}
-  \}
-  \\[6pt]
-  &\cup&
-  \{
-  a \leftrightarrow
-  v_{B_1} \vee \dots \vee v_{B_k}
-  \mid
-  \\&&\qquad\quad
-  a\in\atom{P} \text{ and }
-  \atbody{P}{a} = \{B_1,\dots,B_k\}
-  \}\ ,
-\end{eqnarray*}
-%
-where $\atbody{P}{a}=\{\body{r}\mid r\in P\text{ and }\head{r}=a\}$
+  \begin{itemize}
+  \item<2-> The completion of a logic program $P$
+    \begin{align*}
+      &
+        \{\,
+        a \leftrightarrow
+        v_{B_1} \vee \dots \vee v_{B_k}
+        \mid
+        a\in\atom{P},
+        \atbody{P}{a} = \{B_1,\dots,B_k\}
+        \,\}
+      \only<3->{\\[5pt]
+      \cup\ &
+        \{\,
+        v_B \leftrightarrow
+        a_1          \wedge \dots \wedge a_m      \wedge
+        \neg a_{m+1} \wedge \dots \wedge \neg a_n \mid
+        \\&\kern 47pt
+        B \in\body{P},
+        B = \{a_1,\dots,a_m,\neg a_{m+1},\dots,\neg a_n\}
+        \,\}}
+    \end{align*}
+  \item<2-> [] where $\atbody{P}{a}=\{\,\body{r}\mid r\in P, \head{r}=a\,\}$
+    \bigskip
+  \item<4-> \structure{Notation} \ We write \Tsigned{B} and \Fsigned{B} rather than \Tsigned{v_B} and \Fsigned{v_B}
+  \end{itemize}
 \end{frame}
-%------------------------------------------------------------
+% ----------------------------------------------------------------------
 \begin{frame}{Nogoods from logic programs}{via program completion}
 
   \begin{itemize}
@@ -38,99 +38,97 @@ where $\atbody{P}{a}=\{\body{r}\mid r\in P\text{ and }\head{r}=a\}$
          a_1     \wedge\dots\wedge      a_m \wedge
     \neg a_{m+1} \wedge\dots\wedge \neg a_n
     \]
-    can be decomposed into two implications:
+    can be decomposed into two implications
     \medskip
-    \begin{enumerate}
-    \item<only@2>\normalsize
-      \alert{%
+    \begin{enumerate}\normalsize
+    \item<only@2-5>
       \(
       v_B \to
            a_1     \wedge\dots\wedge      a_m \wedge
       \neg a_{m+1} \wedge\dots\wedge \neg a_n
-      \)}
-
-      \smallskip
-      is equivalent to the conjunction of
-      \[
-      \neg v_B \vee  a_1
-      ,\ \dots,\
-      \neg v_B \vee  a_m
-      ,\
-      \neg v_B \vee  \neg a_{m+1}
-      ,\ \dots,\
-      % \text{ and }
-      \neg v_B \vee  \neg a_n
-      \]
-      and induces the set of nogoods
-      \alert{\small%
-        \[
-        \ClNo{B}
-        =
-        \{\,\{\Tsigned{B},\Fsigned{a_1}\},
-        \dots,
-        \{\Tsigned{B},\Fsigned{a_m}\},
-        \{\Tsigned{B},\Tsigned{a_{m+1}}\},
-        \dots,
-        \{\Tsigned{B},\Tsigned{a_n}\}\,\}
-        \]
-      }
-    \item<only@3->\normalsize
-      \alert{%
+      \)
+      \par\medskip
+    \item<only@3-5>[] is equivalent to the conjunction of
+      \par\medskip
       \(
-      a_1          \wedge \dots \wedge a_m      \wedge
-      \neg a_{m+1} \wedge \dots \wedge \neg a_n
-      \rightarrow v_B
-      \)}
-
-      \smallskip
-      gives rise to the nogood
-      \[
-      \clno{B}
-      =
+      \alt<4->{\neg(v_B\wedge\neg     a_1)}{\neg v_B\vee     a_1}
+      ,\dots,
+      \alt<4->{\neg(v_B\wedge\neg     a_m)}{\neg v_B\vee     a_m}
+      ,
+      \alt<4->{\neg(v_B\wedge a_{m+1})}{\neg v_B\vee\neg a_{m+1}}
+      ,\dots,
+      \alt<4->{\neg(v_B\wedge a_n)}{\neg v_B\vee\neg a_n}
+      \)
+      \par\medskip
+    \item<only@5-5>[] yields the set of nogoods \ClNo{B}, viz
+      \par\medskip
+      \(
+      \{\,
+      \{\Tsigned{B},\Fsigned{a_1}\},
+      \dots,
+      \{\Tsigned{B},\Fsigned{a_m}\},
+      \{\Tsigned{B},\Tsigned{a_{m+1}}\},
+      \dots,
+      \{\Tsigned{B},\Tsigned{a_n}\}
+      \,\}
+      \)
+    \item<only@6-9>
+      \(
+      a_1 \wedge\dots\wedge      a_m\wedge \neg a_{m+1}\wedge\dots\wedge\neg a_n\rightarrow v_B
+      \)
+      \par\medskip
+    \item<only@7-9>[] is equivalent to
+      \par\medskip
+      \(
+      \alt<8->{\neg (     a_1\wedge\dots\wedge     a_m\wedge\neg a_{m+1}\wedge\dots\wedge \neg a_n\wedge\neg v_B)}%
+              {      \neg a_1\vee  \dots\vee  \neg a_m\vee       a_{m+1}\vee  \dots\vee        a_n\vee       v_B }
+      \)
+      \par\medskip
+    \item<only@9-9>[] yields the nogood \clno{B}, viz
+      \par\medskip
+      \(
       \alert{\{\Fsigned{B},\Tsigned{a_1},\dots,\Tsigned{a_m},\Fsigned{a_{m+1}},\dots,\Fsigned{a_n}\}}
-      \]
-      \bigskip
+      \)
   \end{enumerate}
 \end{itemize}
 \end{frame}
-%------------------------------------------------------------
+% ----------------------------------------------------------------------
 \begin{frame}{Nogoods from logic programs}{via program completion}
-
   \begin{itemize}
   \item Analogously, the (atom-oriented) equivalence
     \[
     a \leftrightarrow v_{B_1} \vee \dots \vee v_{B_k}
     \]
     yields the nogoods
-    \begin{enumerate}
-    \item []
+    \par\medskip
+    \begin{enumerate}\normalsize
     \item
       \(
       \ClNo{a} = \{\,\{\Fsigned{a},\Tsigned{B_1}\},\dots,\{\Fsigned{a},\Tsigned{B_k}\}\,\}
       \)
-      and
-    \item []
+    \medskip
     \item
       \(
-      \clno{a} = \{\Tsigned{a},\Fsigned{B_1},\dots,\Fsigned{B_k}\}
+      \,\clno{a}\, = \{\Tsigned{a},\Fsigned{B_1},\dots,\Fsigned{B_k}\}
       \)
-    \item []
-    \end{enumerate}
-%  \item [] where $\body{a}=\{B_1,\dots,B_k\}$ dor an atom $a\in\atom{P}$
+  \end{enumerate}
+  %   \medskip
+  % \item [] \structure{Note} \ $\body{a}=\{B_1,\dots,B_k\}$ for $a\in\atom{P}$
   \end{itemize}
 \end{frame}
-% ------------------------------------------------------------
+% ----------------------------------------------------------------------
 \begin{frame}{Nogoods from logic programs}{atom-oriented nogoods}
   \begin{itemize}
-  \item<1> For an atom $a$ where $\atbody{P}{a}=\{B_1,\dots,B_k\}$,
+  \item<1-> For an atom $a$ where $\atbody{P}{a}=\{B_1,\dots,B_k\}$,
     we get
     \[
     \{\Tsigned{a},\Fsigned{B_1},\dots,\Fsigned{B_k}\}
-    \quad\text{and}\quad
+    \text{ and }
     \{\,\{\Fsigned{a},\Tsigned{B_1}\},\dots,\{\Fsigned{a},\Tsigned{B_k}\}\,\}
-    \]
+  \]
+  \par
   \item<2-> \structure{Example} \
-    Given Atom~$x$ with $\body{x}=\{\{y\},\{\neg z\}\}$, we obtain
+    Given atom~$x$ with $\body{x}=\{\{y\},\{\neg z\}\}$, we obtain
     \arrayrulewidth=.3pt
     \[
     \begin{array}{|rcl|}
@@ -152,15 +150,15 @@ where $\atbody{P}{a}=\{\body{r}\mid r\in P\text{ and }\head{r}=a\}$
       \Tsigned{\only<6-7,11-12>{\color{green}}x},
       \Fsigned{\only<6-7,11-12>{\color{red}}\{y\}},
       \Fsigned{\only<6-7,11-12>{\color{red}}\{\neg z\}}
-      \}},
+      \}}
     \)
-    the signed literal
-    \begin{itemize}
+    % the signed literal
+    \begin{itemize}\normalsize
     \item<5-9> \Fsigned{\only<7,9>{\color{red}}x} is unit-resulting  wrt \alert<5>{assignment}
       \(
       (\Fsigned{\only<5-9>{\color{red}}{\{y\}}},\Fsigned{\only<5-9>{\color{red}}\{\neg z\}})
       \)
-      and
+      \smallskip
     \item<10-> \Tsigned{\only<12,14>{\color{green}}\{\neg z\}} is unit-resulting  wrt assignment
       \(
       (\Tsigned{\only<10-14>{\color{green}}x},\Fsigned{\only<10-14>{\color{red}}\{y\}})
@@ -168,10 +166,10 @@ where $\atbody{P}{a}=\{\body{r}\mid r\in P\text{ and }\head{r}=a\}$
     \end{itemize}
   \end{itemize}
 \end{frame}
-%------------------------------------------------------------
+% ----------------------------------------------------------------------
 \begin{frame}{Nogoods from logic programs}{body-oriented nogoods}
   \begin{itemize}
-  \item <1> For a body $B=\{a_1,\dots,a_m,\neg a_{m+1},\dots,\neg a_n\}$, %\pause,
+  \item <1-> For a body $B=\{a_1,\dots,a_m,\neg a_{m+1},\dots,\neg a_n\}$, %\pause,
     we get
     \vspace{-2pt}
     \[
@@ -189,36 +187,36 @@ where $\atbody{P}{a}=\{\body{r}\mid r\in P\text{ and }\head{r}=a\}$
     \end{array}
   \]
   \item<2-> \structure{Example} \
-    Given Body~$\{x,\neg y\}$, we obtain
+    Given body~$\{x,\neg y\}$, we obtain
     \arrayrulewidth=.3pt
     \[
-    \begin{array}{@{}|r@{}l|}
-      \hline
-      \ldots\leftarrow{}&x,\neg y\\[-1.2ex]
-      &\quad\vdots\\[-3pt]
-      \ldots\leftarrow{}&x,\neg y\\
-      \hline
-    \end{array}
-    \quad\quad
-    \begin{array}{p{5pt}l}
-      &\{\Fsigned{\{x,\neg y\}},\Tsigned{x},\Fsigned{y}\}
-      \\[2pt]
-      &\{\,\{\Tsigned{\{x,\neg y\}},\Fsigned{x}\},\{\Tsigned{\{x,\neg y\}},\Tsigned{y}\}\,\}
-    \end{array}
+      \begin{array}{@{}|r@{}l|}
+        \hline
+        \ldots\leftarrow{}&x,\neg y\\[-1.2ex]
+                          &\quad\vdots\\[-3pt]
+        \ldots\leftarrow{}&x,\neg y\\
+        \hline
+      \end{array}
+      \quad\quad
+      \begin{array}{p{5pt}l}
+        &\{\Fsigned{\{x,\neg y\}},\Tsigned{x},\Fsigned{y}\}
+        \\[2pt]
+        &\{\,\{\Tsigned{\{x,\neg y\}},\Fsigned{x}\},\{\Tsigned{\{x,\neg y\}},\Tsigned{y}\}\,\}
+      \end{array}
     \]
   \item<3-> []
-    For nogood $\clno{\{x,\neg y\}}=\{\Fsigned{\{x,\neg y\}},\Tsigned{x},\Fsigned{y}\}$,
-    the signed literal
-    \begin{itemize}
+    For nogood $\clno{\{x,\neg y\}}=\{\Fsigned{\{x,\neg y\}},\Tsigned{x},\Fsigned{y}\}$
+    % the signed literal
+    \begin{itemize}\normalsize
     \item \Tsigned{\{x,\neg y\}} is unit-resulting  wrt assignment $(\Tsigned{x},\Fsigned{y})$
-      and
-    \item \Tsigned{y}                    is unit-resulting  wrt assignment $(\Fsigned{\{x,\neg y\}},\Tsigned{x})$
+      \smallskip
+    \item \Tsigned{y}            is unit-resulting  wrt assignment $(\Fsigned{\{x,\neg y\}},\Tsigned{x})$
     \end{itemize}
   \end{itemize}
 \end{frame}
-%------------------------------------------------------------
-\begin{frame}{Characterization of stable models}{for \alert<3>{tight} logic programs\only<3>{, ie.\ \alert{free of positive recursion}}}
-\bigskip
+% ----------------------------------------------------------------------
+\begin{frame}{Characterization of stable models}{tight logic programs}
+\medskip
 Let $P$ be a logic program and
 \[
 \begin{array}{lcr@{}c@{}l}
@@ -235,15 +233,18 @@ Let $P$ be a logic program and
 \{\delta\in\ClNo{B}\mid B\in\body{P}\}
 \end{array}
 \]
-\bigskip
-\pause
-\begin{theorem}
-Let $P$ be a \alert{tight} logic program. Then,
-
-\qquad $X\subseteq\atom{P}$ is a stable model of~$P$ \alert{iff}
-
-\qquad $X=\tlits{\ass}\cap\atom{P}$ for a (unique) solution \ass\ for $\Delta_P$
-\end{theorem}
+\begin{center}\pause
+  \begin{minipage}[t]{0.8\linewidth}
+    \begin{theorem}
+      Let $P$ be a \alert{tight} logic program. Then,
+      \par\smallskip
+      \begin{itemize}
+      \item [] $X\subseteq\atom{P}$ is a stable model of~$P$ iff
+      \item [] $X=\tlits{\ass}\cap\atom{P}$ for a (unique) solution \ass\ for $\Delta_P$
+      \end{itemize}
+    \end{theorem}
+  \end{minipage}
+\end{center}
 % \pause
 % \begin{itemize}
 % \item [\ithand] The set $\Delta_P$ of nogoods captures inferences from

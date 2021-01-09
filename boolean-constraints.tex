@@ -16,7 +16,7 @@
       \medskip
     \item<only@4  > The complement, $\overline{\sigma}$, of a signed literal $\sigma$ is defined as
       \begin{itemize}\normalsize
-      \item $\overline{\Tsigned{v}} = \Fsigned{v}$ and
+      \item $\overline{\Tsigned{v}} = \Fsigned{v}$
       \item $\overline{\Fsigned{v}} = \Tsigned{v}$
       \end{itemize}
     \end{itemize}
@@ -40,9 +40,9 @@
   \begin{itemize}
   \item<2-> A \alert{nogood} is a set $\{\sigma_1,\ldots,\sigma_n\}$ of signed literals\only<3-4>{,}
     \begin{itemize}\normalsize
-    \item<only@3-5> expressing a \alert{constraint} violated by any assignment
+    \item<only@3-6> expressing a \alert{constraint} violated by any assignment
       \\containing $\sigma_1,\ldots,\sigma_n$, or alternatively,
-    \item<only@3-5> representing a partial assignment that
+    \item<only@3-6> representing a partial assignment that
       \\cannot be extended to a solution
       \medskip
     \end{itemize}
@@ -51,7 +51,7 @@
     \\ both \Tsigned{a} and \Fsigned{b}
     \par\smallskip
     That is, no such assignment can be extended to a solution
-  \item<only@5-> An assignment \ass\ such that
+  \item<only@6-> An assignment \ass\ such that
     \par\smallskip
     \begin{itemize}\normalsize
     \item \( \tlits{\ass} \cup \flits{\ass} = \domain{\ass} \) \ and
@@ -66,8 +66,8 @@
     \item $\delta\not\subseteq\ass$ \ for all $\delta\in\Delta$
     \end{itemize}
     \bigskip
-  \item<only@7- > \structure{Example} \ \alt<8>{$\{\Fsigned{a},\Fsigned{b}\}$}{$\{\Tsigned{a},\Tsigned{b}\}$}
-    is \alt<8>{no}{a} solution for
+  \item<only@8- > \structure{Example} \ \alt<9>{$\{\Fsigned{a},\Fsigned{b}\}$}{$\{\Tsigned{a},\Tsigned{b}\}$}
+    is \alt<9>{no}{a} solution for
     \(
     \{\,\{\Tsigned{a},\Fsigned{b}\},\{\Fsigned{a},\Tsigned{b}\},\{\Fsigned{b}\}\,\}
     \)

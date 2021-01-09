@@ -92,20 +92,23 @@
 \end{frame}
 % ------------------------------------------------------------
 \begin{frame}{Characterization of stable models}
-\bigskip
-\begin{theorem}
-Let $P$ be a logic program. Then,
-
-\qquad $X\subseteq\atom{P}$ is a stable model of~$P$ \alert{iff}
-
-\qquad $X=\tlits{\ass}\cap\atom{P}$ for a (unique)
-solution \ass\ for $\Delta_P\cup\Lambda_P$
-\end{theorem}
+\begin{center}\pause
+  \begin{minipage}[t]{0.8\linewidth}
+    \begin{theorem}
+      Let $P$ be a logic program. Then,
+      \par\smallskip
+      \begin{itemize}
+      \item [] $X\subseteq\atom{P}$ is a stable model of~$P$ \alert{iff}
+      \item [] $X=\tlits{\ass}\cap\atom{P}$ for a (unique) solution \ass\ for $\Delta_P\cup\Lambda_P$
+    \end{itemize}
+  \end{theorem}
+  \end{minipage}
+\end{center}
 \bigskip
 \pause
-\begin{description}
-\item [Some remarks] \
 \begin{itemize}
+\item \structure{Note} \
+\begin{itemize}\normalsize
 \item
 Nogoods in $\Lambda_P$ augment $\Delta_P$
 with conditions checking for \alert{unfounded sets},
@@ -115,7 +118,7 @@ those being loops
 While $|\Delta_P|$ is linear in the size of $P$,
 $\Lambda_P$ may contain \alert{exponentially many} (non-redundant) loop nogoods
 \end{itemize}
-\end{description}
+\end{itemize}
 \end{frame}
 % ----------------------------------------------------------------------
 %

@@ -1,59 +1,35 @@
 % ----------------------------------------------------------------------
 \begin{frame}{Nogoods from logic programs}{via loop formulas}
 
-  Let $P$ be a normal logic program and recall that:
-  %
+  Let $P$ be a normal logic program
+
   \begin{itemize}
-  \item <1->
-    For $L\subseteq\atom{P}$,
-    the external supports of $L$ for $P$ are
-    \begin{eqnarray*}
-      \ES{L}{P}
-      & = &
-      \{r\in P\mid\head{r}\in L \text{ and } \pbody{r}\cap L=\emptyset\}
-    \end{eqnarray*}
-
   \item <2->
-    The loop formula of $L$ for $P$ is
-    \begin{eqnarray*}
-      \LFS{L}{P}
-      & = &
-      \big(
-      \mbox{$\bigvee_{A\in L}$} A
-      \big)
+    For $L\subseteq\atom{P}$,
+    define the \alert{external \alt<3->{bodies}{supports}} of $L$ for $P$ as
+    \[
+      \alt<3->{\EB{L}{P} = \{ \body{r}     \mid r\in P,\head{r}\in L, \pbody{r}\cap L=\emptyset \}}
+              {\ES{L}{P} = \{       r \in P\mid        \head{r}\in L, \pbody{r}\cap L=\emptyset \}}
+    \]
+  \item<2->
+    The \alert{loop formula} of $\{a_1,\dots,a_n\}$ for $P$ is
+    \[
+      a_1\vee\dots\vee a_n
       \rightarrow
       \big(
-      \mbox{$\bigvee_{r\in\ES{L}{P}}$}
-      % \comp BUGGED :)
-      {\body{r}}
+      \textstyle{\bigvee_{\alt<3->{B\in\EB{\{a_1,\dots,a_n\}}{P}}{r\in\ES{\{a_1,\dots,a_n\}}{P}}}}\BF{\alt<3->{B}{\body{r}}}
       \big)
-      \\
-      & \leftrightarrow &
-      \big(
-      % \left(
-      \mbox{$\bigwedge_{r\in\ES{L}{P}}$}
-      \neg% \comp
-      {\body{r}}
-      \big)
-      % \right)
-      \rightarrow
-      \big(
-      \mbox{$\bigwedge_{A\in L}$}\neg A
-      \big)
-    \end{eqnarray*}
-    \vspace*{-4mm}
-    \begin{itemize}
-    \item \structure{Note} \
-      The loop formula of $L$ enforces
-      all atoms in~$L$ to be \emph{false}
-      \par
-      whenever $L$ is not externally supported
-    \end{itemize}
-
-  \item <3-> The external bodies of $L$ for $P$ are
-    \begin{eqnarray*}
-      \EB{L}{P} & = & \{\body{r} \mid r\in \ES{L}{P}\}
-    \end{eqnarray*}
+    \]
+  \item<4->[] equivalent to the conjunction of
+    \[
+      \alt<5>{%
+        \neg (     a_1\wedge\textstyle{\bigwedge_{B\in\EB{\{a_1,\dots,a_n\}}{P}}}\neg\BF{B})
+        ,\dots,
+        \neg (     a_n\wedge\textstyle{\bigwedge_{B\in\EB{\{a_1,\dots,a_n\}}{P}}}\neg\BF{B})}{%
+              \neg a_1\vee  \textstyle{\bigvee  _{B\in\EB{\{a_1,\dots,a_n\}}{P}}}\BF{B}
+        ,\dots,
+              \neg a_n\vee  \textstyle{\bigvee  _{B\in\EB{\{a_1,\dots,a_n\}}{P}}}\BF{B}}
+    \]
   \end{itemize}
 \end{frame}
 %------------------------------------------------------------

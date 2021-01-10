@@ -1,14 +1,16 @@
 % ----------------------------------------------------------------------
 \begin{frame}{Assignments}
+  Let $P$ be a logic program
   \begin{itemize}
-  \item<2-> An (ordered) \alert{assignment} \ass\ over $\domain{\ass}=\atom{P}\cup\body{P}$
+  \item<2-> An (ordered partial) \alert{assignment} \ass\ over $\atom{P}\cup\body{P}$
     is a sequence
     \[
-    (\sigma_1,\ldots,\sigma_n)
+    (\sigma_1,\dots,\sigma_n)
     \]
     of \alert{signed literals}
     $\sigma_i$ of form \alert{$\Tsigned{v}$} or \alert{$\Fsigned{v}$} for
-    $v\in\domain{\ass}$ and $1 \leq i \leq n$
+    $v\in\atom{P}\cup\body{P}$
+    \par and $1 \leq i \leq n$
     \medskip
     \begin{itemize}\normalsize
     \item<only@3-4> $\Tsigned{v}$   expresses that $v$ is \emph{true},\; that is, $v\mapsto\true$, and
@@ -20,17 +22,19 @@
       \item $\overline{\Fsigned{v}} = \Tsigned{v}$
       \end{itemize}
     \end{itemize}
-  \item<only@6-> $\ass\circ\sigma$ stands for the result of appending $\sigma$ to \ass
-  \item<only@6-> $\ass[\sigma_k]=(\sigma_1,\ldots,\sigma_{k-1})$ gives the prefix of \ass\ up to $\sigma_k$
+  \item<only@6> $\ass\circ\sigma$ stands for the result of appending $\sigma$ to \ass
+  \item<only@6> $\ass[\sigma_k]=(\sigma_1,\ldots,\sigma_{k-1})$ gives the prefix of \ass\ up to $\sigma_k$
     \medskip
-  \item<only@7> \structure{Simplicity} \ We sometimes identify \ass\ with the set of its literals
-    \smallskip
-  \item<only@7>
+  \item<only@8-> \structure{Simplicity} \ We sometimes identify \ass\ with the set of its literals
+    \[
+    \{\sigma_1,\dots,\sigma_n\}
+    \]
+  \item<only@9>
     With this,
     we access \emph{true} and \emph{false} propositions in \ass\ via
     \begin{itemize}\normalsize
-    \item \( \tlits{\ass} = \{v \in \domain{\ass} \mid \Tsigned{v} \in\ass\} \) and
-    \item \( \flits{\ass} = \{v \in \domain{\ass} \mid \Fsigned{v} \in\ass\} \)
+    \item \( \tlits{\ass} = \{v \in \atom{P}\cup\body{P} \mid \Tsigned{v} \in\ass\} \)
+    \item \( \flits{\ass} = \{v \in \atom{P}\cup\body{P} \mid \Fsigned{v} \in\ass\} \)
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -54,7 +58,7 @@
   \item<only@6-> An assignment \ass\ such that
     \par\smallskip
     \begin{itemize}\normalsize
-    \item \( \tlits{\ass} \cup \flits{\ass} = \domain{\ass} \) \ and
+    \item \( \tlits{\ass} \cup \flits{\ass} = \atom{P}\cup\body{P} \) \ and
       \smallskip
     \item \( \tlits{\ass} \cap \flits{\ass} = \emptyset \)
     \end{itemize}

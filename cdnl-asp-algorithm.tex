@@ -1,7 +1,7 @@
 % ----------------------------------------------------------------------
 \begin{frame}{Outline of CDNL-ASP algorithm}
 \begin{itemize}
-\item Keep track of deterministic consequences by unit propagation on:
+\item Keep track of deterministic consequences by unit propagation on
   \begin{itemize}
   \item Program completion \hfill [$\Delta_P$]%
   \item Loop nogoods, determined and recorded on demand \hfill [$\Lambda_P$]%
@@ -11,11 +11,11 @@
   \item Dynamic nogoods, derived from conflicts and unfounded sets \hfill[$\nabla$]%
   \end{itemize}
 \pause
-\item When a nogood in $\Delta_P\cup\nabla$ becomes \alert<2>{violated}:
+\item When a nogood in $\Delta_P\cup\nabla$ becomes \alert<2>{violated}
   \begin{itemize}
   \item \alert<2>{Analyze} the conflict by resolution
     \par
-    (until reaching a {Unique Implication Point}, short: UIP)
+    (until reaching a {Unique Implication Point};  UIP)
   \item \alert<2>{Learn} the derived conflict nogood~$\delta$
   \item \alert<2>{Backjump} to the earliest (heuristic) choice such that
         the\par complement of the UIP is unit-resulting for $\delta$
@@ -23,7 +23,7 @@
         (by unit propagation)
   \end{itemize}
 \pause
-\item Terminate when either:
+\item Terminate when either
   \begin{itemize}
   \item Finding a stable model (a solution for $\Delta_P\cup\Lambda_P$)
   \item Deriving a conflict independently of (heuristic) choices

@@ -4,15 +4,13 @@
   Let $P$ be a normal logic program
 
   \begin{itemize}
-  \item <2->
-    For $L\subseteq\atom{P}$,
-    define the \alert{external \alt<3->{bodies}{supports}} of $L$ for $P$ as
+  \item <2-> For $L\subseteq\atom{P}$,
+    the \alert{external \alt<3->{bodies}{supports}} of $L$ for $P$ are
     \[
       \alt<3->{\EB{L}{P} = \{ \body{r}     \mid r\in P,\head{r}\in L, \pbody{r}\cap L=\emptyset \}}
               {\ES{L}{P} = \{       r \in P\mid        \head{r}\in L, \pbody{r}\cap L=\emptyset \}}
     \]
-  \item<2->
-    The \alert{loop formula} of $\{a_1,\dots,a_n\}$ for $P$ is
+  \item<2-> The \alert{loop formula} of $\{a_1,\dots,a_n\}$ for $P$ is
     \[
       a_1\vee\dots\vee a_n
       \rightarrow
@@ -36,8 +34,9 @@
 \begin{frame}{Nogoods from logic programs}{loop nogoods} %\label{cdnl:lambda}
   \begin{itemize}
   \item<1->
-    For a logic program $P$ and some $\emptyset \subset U\subseteq\atom{P}$,\\
-    define the \alert{loop nogood} of an atom $a\in U$ as
+    For a logic program $P$ and some $\emptyset \subset U\subseteq\atom{P}$,
+    \par
+    the \alert{loop nogood} of an atom $a\in U$ is
     \begin{eqnarray*}
       \lambda(a,U)
       & = &
@@ -46,7 +45,7 @@
     where $\EB{U}{P}=\{B_1,\dots,B_k\}$
     \medskip
   \item<2->
-    We get the following set of loop nogoods for $P$:
+    The set of loop nogoods for $P$ is
     \begin{eqnarray*}
       \Lambda_P
       & = &
@@ -58,8 +57,7 @@
       a\in U
       \}
     \end{eqnarray*}
-  \item<3->  The set $\Lambda_P$ of loop nogoods denies cyclic
-    support among \emph{true} atoms
+  \item<3-> The loop nogoods in $\Lambda_P$ deny cyclic support among \emph{true} atoms
   \end{itemize}
 \end{frame}
 %------------------------------------------------------------
@@ -80,11 +78,11 @@
       \end{array}
     \right\}
     \]
-  \item<2-> For $u$ in the set $\{u,v\}$, we obtain the loop nogood:
+  \item<2-> For $u$ in the set $\{u,v\}$, we obtain the loop nogood
     \begin{eqnarray*}
       \lambda(u,\{u,v\}) &=& \{\Tsigned{u},\Fsigned{\{x\}}\}
     \end{eqnarray*}
-  \item<3-> [] Similarly for $v$ in $\{u,v\}$, we get:
+  \item<3-> [] Similarly for $v$ in $\{u,v\}$, we get
     \begin{eqnarray*}
       \lambda(v,\{u,v\}) &=& \{\Tsigned{v},\Fsigned{\{x\}}\}
     \end{eqnarray*}
@@ -114,6 +112,7 @@ Nogoods in $\Lambda_P$ augment $\Delta_P$
 with conditions checking for \alert{unfounded sets},
 in particular,
 those being loops
+\smallskip
 \item
 While $|\Delta_P|$ is linear in the size of $P$,
 $\Lambda_P$ may contain \alert{exponentially many} (non-redundant) loop nogoods

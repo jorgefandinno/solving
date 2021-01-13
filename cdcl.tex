@@ -4,25 +4,24 @@
   \bigskip
   \textbf{loop}
   \begin{itemize}
-  \item [] \textit{propagate}      \hfill// deterministically assign literals
+  \item [] \textit{propagate}    \hfill\structure{// deterministically assign literals}
   \item [] \textbf{if} no conflict \textbf{then}
-    \begin{itemize}
+    \begin{itemize}\normalsize
     \item [] \textbf{if} all variables assigned
       \textbf{then}
       \textbf{return} solution
     \item [] \textbf{else}
-      \textit{decide}
-      \hfill// non-deterministically assign some literal
+      \textit{decide}            \hfill\structure{// non-deterministically assign some literal}
     \end{itemize}
   \item [] \textbf{else}
-    \begin{itemize}
+    \begin{itemize}\normalsize
     \item [] \textbf{if} top-level conflict
       \textbf{then}
       \textbf{return} unsatisfiable
     \item [] \textbf{else}
-      \begin{itemize}
-      \item [] \textit{analyze} \hfill// analyze conflict and add conflict constraint
-      \item [] \textit{backjump} \hfill// unassign literals until conflict constraint is unit
+      \begin{itemize}\normalsize
+      \item [] \textit{analyze}  \hfill\structure{// analyze conflict and add conflict constraint}
+      \item [] \textit{backjump} \hfill\structure{// unassign literals until conflict constraint is unit}
       \end{itemize}
     \end{itemize}
   \end{itemize}

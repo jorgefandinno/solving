@@ -1,5 +1,5 @@
 % ----------------------------------------------------------------------
-\begin{frame}{Outline of {NogoodPropagation}}
+\begin{frame}{Outline of \Propagation}
   \smallskip
   \begin{itemize}
   \item Derive deterministic consequences via
@@ -16,10 +16,10 @@
     \medskip
     \begin{itemize}\normalsize
   \item<6-> $U$ is \alert{unfounded} if $\EB{U}{P}\subseteq\flits{\ass}$
-  \item<7->[] \itarrow\ For any $a\in U$, we have $(\lambda(a,U)\setminus\{\Tsigned{a}\})\subseteq\ass$
+  \item<7->[] \itarrow\ for any $a\in U$, we have $(\lambda(a,U)\setminus\{\Tsigned{a}\})\subseteq\ass$
     \smallskip
   \item<8-> Focus on unfounded sets~$U$ satisfying $\emptyset\subset U \subseteq (\atom{P}\setminus\flits{\ass})$
-  \item<9->[] \itarrow\ For a fixpoint \ass\ of unit propagation,
+  \item<9->[] \itarrow\ for a fixpoint \ass\ of unit propagation,
   \item<9->[]\phantom{\itarrow}  $U$ contains some loop of~$P$
     \smallskip
   \item<10-> For an unfounded set $U$ and some $a\in U$, add $\lambda(a,U)$ to $\nabla$
@@ -51,6 +51,10 @@
       of the positive atom dependency graph of~$P$
     \end{itemize}
   \end{itemize}
+\end{frame}
+% ----------------------------------------------------------------------
+\begin{frame}[shrink=30]
+\input{solving/algorithms/algo-unfounded-set}
 \end{frame}
 % ----------------------------------------------------------------------
 \begin{frame}{Example}

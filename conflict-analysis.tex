@@ -126,35 +126,82 @@
   \]
 \end{frame}
 % ----------------------------------------------------------------------
-\begin{frame}{Remarks}
-\begin{itemize}
-\item
-There always is a First-UIP at which conflict analysis terminates
-\begin{itemize}
-\item
-In the worst, resolution stops at the
-heuristically chosen literal\\ assigned at decision level~$\mathit{dl}$
-\end{itemize}
-\pause
-\item
-The nogood~$\delta$ containing First-UIP~$\sigma$ is violated by~\ass,
-viz.\ $\delta\subseteq\ass$
-\item
-We have $k=\mathit{max}(\{\mathit{dl}(\sigmaAUX)\mid\sigmaAUX\in\delta\setminus\{\sigma\}\}\cup\{0\})<\mathit{dl}$
-\pause
+\begin{frame}{Example}
+  \[
+    P
+    =
+    \left\{
+      \begin{array}{l}
+        x  \leftarrow  \neg y\\
+        y  \leftarrow  \neg x
+      \end{array}
+      \
+      \begin{array}{l}
+        u  \leftarrow x,y\\
+        u  \leftarrow v
+      \end{array}
+      \
+      \begin{array}{l}
+        v  \leftarrow x\\
+        v  \leftarrow u,y
+      \end{array}
+      \
+      \begin{array}{l}
+        w  \leftarrow \neg x,\neg y\\
+        \mbox{~}
+      \end{array}
+    \right\}
+  \]
+  \medskip\footnotesize
+  \[
+    \begin{array}{|c|cc|l|l}
+      \cline{1-4}
+      \mathit{dl} &\sigma_{\!d}                         &\overline{\sigma}                    &\delta&
+      \\\cline{1-4}\cline{1-4}
+      1           &\alert<4>{\Tsigned{u}}               &\phantom{\Fsigned{\{x,y\}}}          &\phantom{\{\Tsigned{u},\Fsigned{\{x\}},\Fsigned{\{x,y\}}\}}&\phantom{{\{{\Tsigned{u}},{\Fsigned{x}},{\Fsigned{\{x\}}}\}}}
+      \\
+                  &\phantom{\Fsigned{\{\neg x,\neg y\}}}&\onslide<2->{\alert<4>{\Tsigned{x}}} &\onslide<2->{\{\Tsigned{u},\Fsigned{x}\}}&
+      \\
+                  &                                     &\onslide<3->{\vdots}                 &&
+      \\
+                  &                                     &\onslide<3->{\alert<4>{\Tsigned{v}}} &\onslide<3->{\{\Fsigned{v},\Tsigned{\{x\}}\}}&
+      \\
+                  &                                     &\onslide<3->{\Fsigned{y}}            &\onslide<3->{\{\Tsigned{y},\Fsigned{\{\neg x\}}\}}&
+      \\
+                  &                                     &\onslide<3->{\Fsigned{w}}            &\onslide<3->{\{\Tsigned{w},\Fsigned{\{\neg x,\neg y\}}\}}&\onslide<3->{\text{\OK}}
+      \\\cline{1-4}
+    \end{array}
+  \]
+\end{frame}
+% ----------------------------------------------------------------------
+\begin{frame}{Observations}
+  \bigskip
   \begin{itemize}
-  \item
-  After recording $\delta$ in $\nabla$ and backjumping to decision level~$k$,\\
-  $\overline{\sigma}$ is unit-resulting for $\delta$ !
-  \item
-  Such a nogood $\delta$ is called \alert{asserting}
+  \item<2->
+    There always is a First-UIP at which conflict analysis terminates
+    \begin{itemize}\normalsize
+    \item
+      in the worst case, resolution stops at the
+      heuristically chosen literal assigned at decision level~$\mathit{dl}$
+    \end{itemize}
+    \smallskip
+  \item<3->
+    The nogood~$\delta$ containing First-UIP~$\sigma$ is violated by~\ass,
+    viz.\ $\delta\subseteq\ass$,
+  \item<3->[] and $k=\mathit{max}(\{\mathit{dl}(\sigmaAUX)\mid\sigmaAUX\in\delta\setminus\{\sigma\}\}\cup\{0\})$ and $k<\mathit{dl}$
+    \begin{itemize}\normalsize
+    \item
+      after recording $\delta$ in $\nabla$ and backjumping to decision level~$k$,\\
+      $\overline{\sigma}$ is unit-resulting for $\delta$
+    \item
+      such a nogood $\delta$ is called \alert{asserting}
+    \end{itemize}
+    \smallskip
+  \item<4-> Asserting nogoods direct conflict-driven search into a different region of the search space than traversed before
+    \begin{itemize}\normalsize
+    \item without explicitly flipping any heuristically chosen literal
+    \end{itemize}
   \end{itemize}
-\pause
-\item
-Asserting nogoods direct conflict-driven search into a different
-region of the search space than traversed before,\\
-without explicitly flipping any heuristically chosen literal !
-\end{itemize}
 \end{frame}
 % ----------------------------------------------------------------------
 %

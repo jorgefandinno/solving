@@ -1,38 +1,63 @@
 % ----------------------------------------------------------------------
-\begin{frame}{Outline of {ConflictAnalysis}}
-\begin{itemize}
-\item Conflict analysis is triggered whenever
-      some nogood $\delta\in\Delta_P\cup\nabla$
-      becomes violated, viz.\ $\delta\subseteq\ass$,
-      at a decision level~$\mathit{dl}>0$
-      \begin{itemize}
-      \item Note that all but the first literal assigned at $\mathit{dl}$
-        have been unit-resulting for nogoods
-        $\varepsilon\in\Delta_P\cup\nabla$
-      \item If $\sigma\in\delta$ has been unit-resulting for~$\varepsilon$,
-        we obtain a new violated nogood
-        by resolving $\delta$ and $\varepsilon$ as follows
-        \[
-        (\delta\setminus\{\sigma\})\cup(\varepsilon\setminus\{\overline{\sigma}\})
-        \]
-      \end{itemize}
-\pause
-\item Resolution is directed by resolving first over the literal $\sigma\in\delta$
-      derived last, viz.\ $(\delta\setminus\ass[\sigma])=\{\sigma\}$
-      \begin{itemize}
-      \item Iterated resolution progresses in inverse
-                     order of assignment
-      \end{itemize}
-\pause
-\item Iterated resolution stops as soon as it generates
-      a nogood~$\delta$ containing exactly one literal~$\sigma$ assigned
-      at decision level~$\mathit{dl}$
+\begin{frame}{Outline of \ConflictAnalysis}
   \begin{itemize}
-  \item This literal $\sigma$ is called \alert{First Unique Implication Point} (First-UIP)
-  \item All literals in $(\delta\setminus\{\sigma\})$ are assigned
-        at decision levels smaller than~$\mathit{dl}$
+  \item<2-> Conflict analysis is triggered whenever
+    some nogood $\delta\in\Delta_P\cup\nabla$
+    becomes violated, viz.\ $\delta\subseteq\ass$,
+    at a decision level~$\mathit{dl}>0$
+    \begin{itemize}\normalsize
+    \item<3-> all but the first literal assigned at $\mathit{dl}$
+      have been unit-resulting
+      \par
+      for nogoods $\varepsilon\in\Delta_P\cup\nabla$
+    \item<4-> if $\sigma\in\delta$ has been unit-resulting for~$\varepsilon$,
+      we obtain a new violated nogood
+      by resolving $\delta$ and $\varepsilon$ as follows
+      \[
+        (\delta\setminus\{\sigma\})\cup(\varepsilon\setminus\{\overline{\sigma}\})
+      \]
+    \end{itemize}
+  \item<5-> \structure{Example} \
+    \begin{enumerate}\normalsize
+    \item<6-> $\{\Tsigned{u},\Fsigned{\{x\}}^3,\Fsigned{\{x,y\}}^3\}$          \ is violated at decision level 3
+      \par\smallskip\pause[7]
+      \Fsigned{\{x,y\}} \ is unit-resulting for $\{\Tsigned{\{x,y\}},\Fsigned{x}^3\}$
+      \smallskip
+    \item<8-> $\{\Tsigned{u},\Fsigned{\{x\}}^3,\Fsigned{x}^3\}$       \pause[9]\ is violated at decision level 3
+      \par\smallskip\pause[10]
+      \Fsigned{\{x\}} \ is unit-resulting for $\{\Tsigned{\{x\}},\Fsigned{x}^3\}$
+      \smallskip
+    \item<11-> $\{\Tsigned{u},\Fsigned{x}^3\}$                                 \ is violated at decision level 3
+    \end{enumerate}
   \end{itemize}
-\end{itemize}
+\end{frame}
+% ----------------------------------------------------------------------
+\begin{frame}{Outline of \ConflictAnalysis}
+  \begin{itemize}
+  \item<2-> Resolution is directed by resolving first over the literal $\sigma\in\delta$
+    \par
+    derived last, viz.\ $(\delta\setminus\ass[\sigma])=\{\sigma\}$
+  \item <2->[]
+    That is, iterated resolution progresses in inverse order of assignment
+    \smallskip
+  \item<5-> Iterated resolution stops as soon as it generates
+    a nogood~$\delta$ containing exactly one literal~$\sigma$ assigned
+    at decision level~$\mathit{dl}$
+    \begin{itemize}\normalsize
+    \item $\sigma$ is called \alert{First Unique Implication Point} (First-UIP)
+    \item all literals in $(\delta\setminus\{\sigma\})$ are assigned
+      at decision levels\par smaller than~$\mathit{dl}$
+    \end{itemize}
+    \smallskip
+  \item<3-> \structure{Example} \
+    \begin{enumerate}\normalsize
+    \item $\{\Tsigned{u},\Fsigned{\{x\}}^3,\alert<4>{\Fsigned{\{x,y\}}}^3\}$
+      \smallskip
+    \item $\{\Tsigned{u},\alert<4>{\Fsigned{\{x\}}}^3,\Fsigned{x}^3\}$
+      \smallskip
+    \item $\{\Tsigned{u},\Fsigned{x}^3\}$ \quad\pause[6] ---\quad  $\Fsigned{x}^3$ is a First-UIP
+    \end{enumerate}
+  \end{itemize}
 \end{frame}
 % ----------------------------------------------------------------------
 \begin{frame}[c]

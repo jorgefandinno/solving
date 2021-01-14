@@ -2,26 +2,31 @@
 \begin{frame}{Outline of CDNL-ASP algorithm}
   \begin{itemize}
   \item<2-> Keep track of deterministic consequences by unit propagation on
-    \begin{itemize}
+    \begin{itemize}\only<-2>{\normalsize}
     \item program completion \hfill [$\Delta_P$]%
     \item loop nogoods, determined and recorded on demand \hfill [$\Lambda_P$]%
     \item dynamic nogoods, derived from conflicts and unfounded sets \hfill[$\nabla$]%
     \end{itemize}
-  \item<3-> When a nogood in $\Delta_P\cup\nabla$ becomes \alert<2>{violated}
-    \begin{itemize}
-    \item \alert<2>{analyze} the conflict by resolution
-      \par
-      (until reaching a {Unique Implication Point};  UIP)
-    \item \alert<2>{Learn} the derived conflict nogood~$\delta$
-    \item \alert<2>{Backjump} to the earliest (heuristic) choice such that
-      the\par complement of the UIP is unit-resulting for $\delta$
-    \item \alert<2>{Assert} the complement of the UIP and proceed\\
-      (by unit propagation)
-    \end{itemize}
-  \item<2-> Terminate when either
-    \begin{itemize}
-    \item finding a stable model (a solution for $\Delta_P\cup\Lambda_P$)
-    \item deriving a conflict independently of (heuristic) choices
+    \only<3->{\smallskip}
+  \item<4-> When a nogood in $\Delta_P\cup\nabla$ becomes \alert<3>{violated}
+    \begin{enumerate}\only<5-10>{\normalsize}
+    \item<5-> \alert<5-9>{analyze}
+      \uncover<6,15>{the conflict by resolution%
+        \only<-10>{\par} (until reaching a \only<-10>{Unique Implication Point;}  UIP)}
+    \item<5-> \alert<5-9>{learn}
+      \uncover<7,15>{the derived conflict nogood~$\delta$}
+    \item<5-> \alert<5-9>{backjump}
+      \uncover<8,15>{to the earliest (heuristic) choice such that the
+        \par complement of the UIP is unit-resulting for $\delta$}
+    \item<5-> \alert<5-9>{assert}
+      \uncover<9,15>{the complement of the UIP and proceed%
+        \only<-10>{\par} (with unit propagation)}
+    \end{enumerate}
+    \only<11->{\smallskip}
+    \item<12-> Terminate when either
+    \begin{itemize}\only<13-14>{\normalsize}
+    \item<13-> finding a stable model (a solution for $\Delta_P\cup\Lambda_P$)
+    \item<14-> deriving a conflict independently of (heuristic) choices
     \end{itemize}
   \end{itemize}
 \end{frame}

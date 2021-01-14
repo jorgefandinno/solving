@@ -1,3 +1,4 @@
+% ----------------------------------------------------------------------
 \begin{algorithm}[H]
 \caption{\textsc{NogoodPropagation}\label{algo:unit:propagation}}
 \BlankLine
@@ -15,7 +16,7 @@ $U := \emptyset$\AlgoComm*{unfounded set}
     }
     $\Sigma:=\{\delta\in\CN{P}\cup\nabla \mid \delta\setminus\ass=\{\opp{\sigma}\},\sigma\notin\ass\}$\AlgoComm*{unit-resulting nogoods}
     \lIf{$\Sigma\neq\emptyset$}{%
-      \Let{$\opp{\sigma}\in\delta\setminus\ass$ \ForSome $\delta\in\Sigma$}{%
+      \lLet{$\opp{\sigma}\in\delta\setminus\ass$ \ForSome $\delta\in\Sigma$}{%
         $\dlevel{\sigma}:= \max(\{\dlevel{\rho}\mid\rho\in\delta\setminus\{\opp{\sigma}\}\}\cup\{0\})$\;
         $\ass:= \ass\circ\sigma$
       }
@@ -34,12 +35,13 @@ $U := \emptyset$\AlgoComm*{unfounded set}
   }
   % \lLet{$a\in U$}{%
   %   $\nabla:= \nabla\cup\{\lambda(a,U)\}$\AlgoComm*{(temporarily) record loop nogood}
-  \Let{$a\in U$}{%
+  \lLet{$a\in U$}{%
     $\nabla:= \nabla\cup\{\{\Tsigned{a}\}\cup\{\Fsigned{B}\mid B\in\EB{U}{P}\}\}$\hfill\textit{// record loop nogood}%
   }
 }
 \end{algorithm}
-
+% ----------------------------------------------------------------------
+%
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "../../../main"

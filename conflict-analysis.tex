@@ -65,70 +65,65 @@
 \end{frame}
 % ----------------------------------------------------------------------
 \begin{frame}{Example}
-%
-\begin{eqnarray*}
-P
-& = &
-\left\{
-  \begin{array}{l}
-x  \leftarrow  \neg y\\%[-3pt]
-y  \leftarrow  \neg x
-\end{array}
-\
-\begin{array}{l}
-u  \leftarrow x,y\\%[-3pt]
-u  \leftarrow v%\\%[-3pt]
-\end{array}
-\
-\begin{array}{l}
-v  \leftarrow x\\%[-3pt]
-v  \leftarrow u,y%\\%[-3pt]
-\end{array}
-\
-\begin{array}{l}
-w  \leftarrow \neg x,\neg y\\
-\mbox{~}
-\end{array}
-\right\}
-\end{eqnarray*}
-%
-\[
-\footnotesize
-\begin{array}{|@{\:}c@{\:}|@{\:}l@{\:}l@{\:}|@{\:}l@{\:}|l}
-\cline{1-4}
-\mathit{dl}& \sigma_{\!d} & \overline{\sigma} & \delta
-\\\cline{1-4}\cline{1-4}
-1 & \alert<2,5,8>{\Tsigned{u}} & &
-\\\cline{1-4}
-2 & \Fsigned{\{\neg x,\neg y\}} & &
-\\
-  & & \Fsigned{w}     & \{\Tsigned{w},\Fsigned{\{\neg x,\neg y\}}\}=\clno{w}
-\\\cline{1-4}
-3 & \Fsigned{\{\neg y\}} & &
-\\
-  & & \alert<5-6,8-9>{\Fsigned{x}}     & \{\Tsigned{x},\Fsigned{\{\neg y\}}\}=\clno{x}
-\\
-  & & \alert<2-3,5-6>{\Fsigned{\{x\}}} & \{\alert<7>{\Tsigned{\{x\}}},\alert<8>{\Fsigned{x}}\}\in\ClNo{\{x\}}
-& \onslide<8->{\alert<8,10>{\{\Tsigned{u},\alert<9>{\Fsigned{x}}\}}}
-\\
-  & & \alert<2-3>{\Fsigned{\{x,y\}}} & \{\alert<4>{\Tsigned{\{x,y\}}},\alert<5>{\Fsigned{x}}\}\in\ClNo{\{x,y\}} & \onslide<5->{\alert<5>{\{\alert<8>{\Tsigned{u}},\alert<6,8>{\Fsigned{x}},\alert<6-7>{\Fsigned{\{x\}}}\}}}
-\\
-  & & \Tsigned{\{\neg x\}} & \{\Fsigned{\{\neg x\}},\Fsigned{x}\}=\clno{\{\neg x\}}
-\\
-  & & \Tsigned{y} & \{\Fsigned{\{\neg y\}},\Fsigned{y}\}=\clno{\{\neg y\}}
-\\
-%   & & \Fsigned{\{\neg x,\neg y\}} & \{\Tsigned{\{\neg x,\neg y\}},\Tsigned{y}\}\in\ClNo{\{\neg x,\neg y\}}
-% \\
-  & & \Tsigned{\{v\}} & \{\Tsigned{u},\Fsigned{\{x,y\}},\Fsigned\{v\}\}=\clno{u}
-\\
-  & & \Tsigned{\{u,y\}} & \{\Fsigned{\{u,y\}},\Tsigned{u},\Tsigned{y}\}=\clno{\{u,y\}}
-\\
-  & & \Tsigned{v} & \{\Fsigned{v},\Tsigned{\{u,y\}}\}\in\ClNo{v}
-\\
-  & & & \alert<2>{\{\alert<5>{\Tsigned{u}},\alert<3,5>{\Fsigned{\{x\}}},\alert<3-4>{\Fsigned{\{x,y\}}}\}}=\lambda(u,\{u,v\}) & \text{\KO}
-\\\cline{1-4}
-\end{array}
-\]
+  \[
+    P
+    =
+    \left\{
+      \begin{array}{l}
+        x  \leftarrow  \neg y\\
+        y  \leftarrow  \neg x
+      \end{array}
+      \
+      \begin{array}{l}
+        u  \leftarrow x,y\\
+        u  \leftarrow v
+      \end{array}
+      \
+      \begin{array}{l}
+        v  \leftarrow x\\
+        v  \leftarrow u,y
+      \end{array}
+      \
+      \begin{array}{l}
+        w  \leftarrow \neg x,\neg y\\
+        \mbox{~}
+      \end{array}
+    \right\}
+  \]
+  \medskip\footnotesize
+  \[
+    \begin{array}{|c|cc|l|l}
+      \cline{1-4}
+      \mathit{dl}&\sigma_{\!d}                              &\overline{\sigma}                   &\delta&
+      \\\cline{1-4}\cline{1-4}
+      1          &\alert<2,5,8>{\Tsigned{u}                }&                                    &&
+      \\\cline{1-4}
+      2          &              \Fsigned{\{\neg x,\neg y\}} &                                    &&
+      \\
+                 &                                          &                \Fsigned{w}         &\{\Tsigned{w},\Fsigned{\{\neg x,\neg y\}}\}&
+      \\\cline{1-4}
+      3          &              \Fsigned{\{\neg y\}}        &                                    &&
+      \\
+                 &                                          &\alert<5-6,8-9>{\Fsigned{x}}        &\{\Tsigned{x},\Fsigned{\{\neg y\}}\}&
+      \\
+                 &                                          &\alert<2-3,5-6>{\Fsigned{\{x\}}}    &\{\alert<7>{\Tsigned{\{x\}}},\alert<8>{\Fsigned{x}}\}                                             &\onslide<8->{\alert<8,10>{\{\Tsigned{u},\alert<9>{\Fsigned{x}}\}}}
+      \\
+                 &                                          &    \alert<2-3>{\Fsigned{\{x,y\}}}  &\{\alert<4>{\Tsigned{\{x,y\}}},\alert<5>{\Fsigned{x}}\}                                           &\onslide<5->{\alert<5>{\{\alert<8>{\Tsigned{u}},\alert<6,8>{\Fsigned{x}},\alert<6-7>{\Fsigned{\{x\}}}\}}}
+      \\
+                 &                                          &                \Tsigned{\{\neg x\}}&\{\Fsigned{\{\neg x\}},\Fsigned{x}\}&
+      \\
+                 &                                          &                \Tsigned{y}         &\{\Fsigned{\{\neg y\}},\Fsigned{y}\}&
+      \\
+                 &                                          &                \Tsigned{\{v\}}     &\{\Tsigned{u},\Fsigned{\{x,y\}},\Fsigned\{v\}\}&
+      \\
+                 &                                          &                \Tsigned{\{u,y\}}   &\{\Fsigned{\{u,y\}},\Tsigned{u},\Tsigned{y}\}&
+      \\
+                 &                                          &                \Tsigned{v}         &\{\Fsigned{v},\Tsigned{\{u,y\}}\}&
+      \\
+                 &                                          &                                    &\alert<2>{\{\alert<5>{\Tsigned{u}},\alert<3,5>{\Fsigned{\{x\}}},\alert<3-4>{\Fsigned{\{x,y\}}}\}} &\text{\KO}
+      \\\cline{1-4}
+    \end{array}
+  \]
 \end{frame}
 % ----------------------------------------------------------------------
 \begin{frame}{Remarks}

@@ -63,17 +63,17 @@
   \item A conflict at decision level~$0$
     (where~\ass\ contains no heuristically chosen literals)
     indicates non-existence of stable models
-    \smallskip
-  \item A nogood $\delta$ derived by conflict analysis is
-    \alert{asserting}, that is,\\
+    \bigskip
+  \item<2-> A nogood $\delta$ derived by conflict analysis is
+    \alert{asserting}, that is,
+    \par
     some literal is unit-resulting for $\delta$ at a decision level $k<\mathit{dl}$
-    % \pause
     \begin{itemize}\normalsize
-    \item After learning~$\delta$ and backjumping to
-      decision level~$k$,\\ at least one literal is
-      newly derivable by unit propagation
-    \smallskip
-    \item No explicit flipping of heuristically chosen literals !
+    \item<3-> after learning~$\delta$ and backjumping to decision level~$k$,
+
+      at least one literal is newly derivable by unit propagation
+      \smallskip
+    \item<4-> no explicit flipping of heuristically chosen literals
     \end{itemize}
   \end{itemize}
 \end{frame}

@@ -1,20 +1,28 @@
 % ----------------------------------------------------------------------
 \begin{frame}{Summary}
+  \bigskip
   \begin{itemize}
   \item ASP inference as unit propagation on nogoods
 
     reflecting constraints from
-    \begin{itemize}
+    \begin{itemize}\normalsize
     \item program rules
     \item unfounded sets
     \item conflicts
     \end{itemize}
-  \item conflict-driven algorithm for ASP solving
-    % state-of-the-art SAT solving techniques
-  \item favor local propagation on explicit nogoods
-
-    over unfounded set checks
-    % explicate inherent loop nogoods that give rise to unit propagation
+    \medskip
+  \item Conflict-driven algorithms for ASP solving
+    \begin{itemize}\normalsize
+    \item {CDNL-ASP} search
+      \smallskip
+    \item \Propagation\ and \UnFoundedSet\ detection
+      \begin{itemize}
+      \item<only@2> [\itarrow] favor local propagation on explicit nogoods
+        over unfounded set checks
+        % explicate inherent loop nogoods that give rise to unit propagation
+      \end{itemize}
+    \item \ConflictAnalysis
+    \end{itemize}
   \end{itemize}
 \end{frame}
 % ----------------------------------------------------------------------

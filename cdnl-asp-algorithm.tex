@@ -1,26 +1,26 @@
 % ----------------------------------------------------------------------
 \begin{frame}{Outline of CDNL-ASP algorithm}
   \begin{itemize}
-  \item<2-> \alert<3>{Keep track} of deterministic consequences by \alert<3>{unit propagation} on
-    \begin{itemize}\only<-3>{\normalsize}
+  \item<2-> Compute\only<4->{ and \alert<4>{track}} deterministic consequences by unit propagation
+    \begin{itemize}\only<-6>{\normalsize}
     \item completion nogoods                                         \hfill $\Delta_P$
-    \item loop nogoods, determined and recorded \alert<3>{on demand} \hfill $\Lambda_P$\kern 1pt
-    \item dynamic nogoods, derived from conflicts and unfounded sets \hfill $\nabla\phantom{_P}$
+    \item<2-5,7-> loop nogoods\only<5->{, determined and recorded \alert<5>{on demand}} \hfill $\Lambda_P$\kern 1pt
+    \item<3-> dynamic nogoods, derived from \alert<3>{conflicts}\only<5->{ and unfounded sets} \hfill $\nabla\phantom{_P}$
     \end{itemize}
-    \only<4->{\smallskip}
-  \item<5-> When a nogood in $\Delta_P\cup\nabla$ becomes \alert<4>{violated}
-    \begin{enumerate}\only<6-11>{\normalsize}
-    \item<6-> \alert<6-10>{analyze}
-      \uncover<7,16>{the conflict by resolution%
-        \only<-11>{\par} (until reaching a \only<-11>{Unique Implication Point; }UIP)}
-    \item<6-> \alert<6-10>{learn}
-      \uncover<8,16>{the derived conflict nogood~$\delta$}
-    \item<6-> \alert<6-10>{backjump}
-      \uncover<9,16>{to the earliest (heuristic) choice such that the
-        \par complement of the UIP is unit-resulting for $\delta$}
-    \item<6-> \alert<6-10>{assert}
-      \uncover<10,16>{the complement of the UIP and proceed%
-        \only<-11>{\par} (with unit propagation)}
+    \only<7->{\smallskip}
+  \item<8-> When a nogood in $\Delta_P\cup\nabla$ becomes \alert<7>{violated}
+    \begin{enumerate}\only<9-14>{\normalsize}
+    \item<9-> \alert<9-13>{analyze}
+      \uncover<10,19>{the conflict by resolution%
+        \only<-14>{\par} (until reaching a \only<-14>{Unique Implication Point; }UIP)}
+    \item<9-> \alert<9-13>{learn}
+      \uncover<11,19>{the derived conflict nogood~$\delta$}
+    \item<9-> \alert<9-13>{backjump}
+      \uncover<12,19>{to the earliest (non-deterministic) choice such that
+        \par the complement of the UIP is unit-resulting for $\delta$}
+    \item<9-> \alert<9-13>{assert}
+      \uncover<13,19>{the complement of the UIP and proceed%
+        \only<-14>{\par} (with unit propagation)}
     \end{enumerate}
     \only<15->{\smallskip}
     \item<16-> Terminate when either

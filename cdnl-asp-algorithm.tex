@@ -40,9 +40,9 @@
   \begin{itemize}
   \item Decision level~$\mathit{dl}$, initially set to~$0$, is used to count
     \par
-    the number of heuristically chosen literals in assignment~\ass
+    the number of non-deterministically chosen literals in assignment~\ass
     \smallskip
-  \item For a heuristically chosen literal
+  \item For a non-deterministically chosen literal
     $\sigma_{\!d}=\Tsigned{a}$ or $\sigma_{\!d}=\Fsigned{a}$,
     respectively,
     \par
@@ -60,20 +60,20 @@
   \begin{itemize}
   \item A conflict is detected from violation of a nogood $\varepsilon\subseteq\Delta_P\cup\nabla$
     \smallskip
-  \item A conflict at decision level~$0$
-    (where~\ass\ contains no heuristically chosen literals)
+  \item A conflict at decision level~$0$%
+    \only<2>{\footnote{At level $0$, an assignment~\ass\ contains no non-deterministically chosen literals}}
     indicates non-existence of stable models
     \bigskip
-  \item<2-> A nogood $\delta$ derived by conflict analysis is
+  \item<3-> A nogood $\delta$ derived by conflict analysis is
     \alert{asserting}, that is,
     \par
     some literal is unit-resulting for $\delta$ at a decision level $k<\mathit{dl}$
     \begin{itemize}\normalsize
-    \item<3-> after learning~$\delta$ and backjumping to decision level~$k$,
+    \item<4-> after learning~$\delta$ and backjumping to decision level~$k$,
 
       at least one literal is newly derivable by unit propagation
       \smallskip
-    \item<4-> no explicit flipping of heuristically chosen literals
+    \item<5-> no explicit flipping of non-deterministically chosen literals
     \end{itemize}
   \end{itemize}
 \end{frame}

@@ -58,23 +58,25 @@
 \begin{frame}{Observations}{conflicts}
   \bigskip
   \begin{itemize}
-  \item A conflict is detected from violation of a nogood $\varepsilon\subseteq\Delta_P\cup\nabla$
+  \item A conflict is detected from violation of a nogood $\varepsilon$ from $\Delta_P\cup\nabla$,
+    \par
+    that is, whenever $\varepsilon\subseteq\ass$
     \smallskip
   \item A conflict at decision level~$0$%
-    \only<2-3>{\footnote{At level $0$, an assignment~\ass\ contains no non-deterministically chosen literals}}
+    \only<2>{\footnote{At level $0$, an assignment~\ass\ contains no non-deterministically chosen literals}}
     indicates non-existence of stable models
-  \item<3->[] it is also called \alert<3>{top-level conflict}
+  \item[] it is also called top-level conflict
     \bigskip
   \item<4-> A nogood $\delta$ derived by conflict analysis is
     \alert{asserting}, that is,
     \par
     some literal is unit-resulting for $\delta$ at a decision level $k<\mathit{dl}$
     \begin{itemize}\normalsize
-    \item<5-> after learning~$\delta$ and backjumping to decision level~$k$,
+    \item after learning~$\delta$ and backjumping to decision level~$k$,
 
       at least one literal is newly derivable by unit propagation
       \smallskip
-    \item<6-> no explicit flipping of non-deterministically chosen literals
+    \item no explicit flipping of non-deterministically chosen literals
     \end{itemize}
   \end{itemize}
 \end{frame}

@@ -38,15 +38,15 @@
 \begin{frame}{Observations}{decisions}
   \bigskip
   \begin{itemize}
-  \item Decision level~$\mathit{dl}$, initially set to~$0$, is used to count
-    \par
-    the number of non-deterministically chosen literals in assignment~\ass
-    \smallskip
   \item For a non-deterministically chosen literal,
     $\sigma_{\!d}=\Tsigned{a}$ or $\sigma_{\!d}=\Fsigned{a}$,
     % respectively,
     \par
     we require $a\in(\atom{P}\cup\body{P})\setminus(\tlits{\ass}\cup\flits{\ass})$
+    \smallskip
+  \item Decision level~$\mathit{dl}$, initially set to~$0$, is used to count
+    \par
+    the number of non-deterministically chosen literals in assignment~\ass
     \smallskip
   \item For any literal $\sigma\in\ass$,
     $\dlevel{\sigma}$ denotes the decision level of~$\sigma$,

@@ -1,0 +1,30 @@
+% ----------------------------------------------------------------------
+\begin{frame}{Learning from mistakes}
+  \small\medskip
+  \(
+  \begin{array}{cclp{33pt}rp{10pt}l}
+    0 & \Tsigned{a}&                                       &&\{\Fsigned{b},\Tsigned{c},\Fsigned{j},\Tsigned{k}\}&&\\
+      & \Fsigned{b}\\[-5pt]
+      & \vdots\\
+    7 & \Tsigned{c}\\
+      & \Fsigned{d}\\[-5pt]
+      & \vdots\\
+   13 & \Tsigned{e}\\
+      & \Fsigned{f}\\[-5pt]
+      & \vdots\\
+   41 & \Tsigned{g}\\
+      & \Fsigned{h}\\[-5pt]
+      & \vdots     &                                       &&&&0.~\mathsf{conflict}\\
+   42 & \Tsigned{i}&                                       &&&&1.~\mathsf{analyze}\\[-5pt]
+      & \vdots     &                                       &&&&2.~\mathsf{learn}\\
+      & \Fsigned{j}&\{\Tsigned{j},\Fsigned{f},\Tsigned{i}\}&&&&3.~\mathsf{backjump}\\
+      & \Tsigned{k}&\{\Fsigned{k},\Tsigned{c},\Fsigned{j}\}&&&&4.~\mathsf{assert}
+  \end{array}
+  \)
+\end{frame}
+% ----------------------------------------------------------------------
+%
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../main"
+%%% End:

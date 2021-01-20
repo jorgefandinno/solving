@@ -1,0 +1,46 @@
+% ----------------------------------------------------------------------
+\begin{frame}{Nogoods, solutions, and unit propagation}
+  \bigskip
+  \begin{itemize}
+  \item A \alert{nogood} is a set $\{\sigma_1,\ldots,\sigma_n\}$ of signed literals\only<3-4>{,}
+  \item An assignment \ass\ such that
+    \par\smallskip
+    \begin{itemize}\normalsize
+    \item \( \tlits{\ass} \cup \flits{\ass} = \atom{P}\cup\body{P} \) \ and
+      \smallskip
+    \item \( \tlits{\ass} \cap \flits{\ass} = \emptyset \)
+    \end{itemize}
+    \par\smallskip
+    is a \alert{solution} for a set~$\Delta$ of nogoods,
+    if
+    \par\smallskip
+    \begin{itemize}\normalsize
+    \item $\delta\not\subseteq\ass$ \ for all $\delta\in\Delta$
+    \end{itemize}
+    \bigskip
+  \item For a nogood $\delta$, a literal $\sigma\in\delta$, and an assignment \ass,
+    \par\smallskip
+    \alert{$\overline{\sigma}$} is \alert{unit-resulting} for~$\delta$ wrt \ass,
+    if
+    \par\smallskip
+    \begin{itemize}\normalsize
+    \item $\delta\setminus\ass=\{\sigma\}$
+      \ and
+    \par\smallskip
+    \item $\overline{\sigma}\not\in\ass$
+    \end{itemize}
+    \smallskip
+  \item For a set $\Delta$ of nogoods and an assignment~\ass,
+    \alert{unit propagation} is
+
+    the iterated process of extending \ass\ with unit-resulting literals
+
+    until no further literal is unit-resulting for any nogood in $\Delta$
+  \end{itemize}
+\end{frame}
+% ----------------------------------------------------------------------
+%
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../main"
+%%% End:

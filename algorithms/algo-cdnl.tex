@@ -1,34 +1,34 @@
 \begin{algorithm}[H]
-\caption{{CDNL-ASP}\label{algo:cdnl}}
-\BlankLine
-\Input{A normal program $P$}
-\Output{A stable model of $P$ or ``no stable model''}
-\BlankLine
-$\ass:=\emptyset$\AlgoComm*{assignment over $\atom{P}\cup\body{P}$}
-$\nabla:=\emptyset$\AlgoComm*{set of recorded nogoods}
-$\dl:= 0$\AlgoComm*{decision level}
-\BlankLine
-\Loop{}{%
-  $(\ass,\nabla):=\Propagation{$P,\nabla,\ass$}$\;
-\BlankLine
-  \uIf(\AlgoComm*[f]{conflict}){$\varepsilon\subseteq \ass$ \ForSome $\varepsilon\in\CN{P}\cup\nabla$}{%
-\BlankLine
-    \lIf{$\max(\{\dlevel{\sigma}\mid\sigma\in\varepsilon\}\cup\{0\})=0$}{\Return no stable model}\;
-    $(\delta,\dl):=\ConflictAnalysis{$\varepsilon,P,\nabla,\ass$}$\;
-    $\nabla:= \nabla\cup\{\delta\}$\AlgoComm*{(temporarily) record conflict nogood}
-    $\ass:= \ass\setminus\{\sigma\in \ass \mid \dl < \dlevel{\sigma}\}$\AlgoComm*{backjumping}
-\BlankLine
+  \caption{{CDNL-ASP}\label{algo:cdnl}}
+  \BlankLine
+  \Input{A normal program $P$}
+  \Output{A stable model of $P$ or ``no stable model''}
+  \BlankLine
+  $\ass:=\emptyset$\AlgoComm*{assignment over $\atom{P}\cup\body{P}$}
+  $\nabla:=\emptyset$\AlgoComm*{set of recorded nogoods}
+  $\dl:= 0$\AlgoComm*{decision level}
+  \BlankLine
+  \Loop{}{%
+    $(\ass,\nabla):=\Propagation{$P,\nabla,\ass$}$\;
+    \BlankLine
+    \uIf(\AlgoComm*[f]{conflict}){$\varepsilon\subseteq \ass$ \ForSome $\varepsilon\in\CN{P}\cup\nabla$}{%
+      \BlankLine
+      \lIf{$\max(\{\dlevel{\sigma}\mid\sigma\in\varepsilon\}\cup\{0\})=0$}{\Return no stable model}\;
+      $(\delta,\dl):=\ConflictAnalysis{$\varepsilon,P,\nabla,\ass$}$\;
+      $\nabla:= \nabla\cup\{\delta\}$\AlgoComm*{(temporarily) record conflict nogood}
+      $\ass:= \ass\setminus\{\sigma\in \ass \mid \dl < \dlevel{\sigma}\}$\AlgoComm*{backjumping}
+      \BlankLine
+    }
+    \uElseIf(\AlgoComm*[f]{stable model}){$\tlits{\ass}\cup\flits{\ass}=\atom{P}\cup\body{P}$}{%
+      \Return $\tlits{\ass}\cap\atom{P}$\;
+    }
+    \Else{%
+      $\sigma_d:=\Select{$P,\nabla,\ass$}$\AlgoComm*{decision}
+      $\dl:= \dl+1$\;
+      $\dlevel{\sigma_d}:= \dl$\;
+      $\ass:= \ass\circ\sigma_d$\;
+    }
   }
-  \uElseIf(\AlgoComm*[f]{stable model}){$\tlits{\ass}\cup\flits{\ass}=\atom{P}\cup\body{P}$}{%
-    \Return $\tlits{\ass}\cap\atom{P}$\;
-  }
-  \Else{%
-    $\sigma_d:=\Select{$P,\nabla,\ass$}$\AlgoComm*{decision}
-    $\dl:= \dl+1$\;
-    $\dlevel{\sigma_d}:= \dl$\;
-    $\ass:= \ass\circ\sigma_d$\;
-  }
-}
 \end{algorithm}
 
 %%% Local Variables:

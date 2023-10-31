@@ -1,135 +1,135 @@
 % ----------------------------------------------------------------------
 \begin{frame}{Outline of CDNL-ASP algorithm}
   \begin{itemize}
-  \item<2-> Compute\only<4->{ and \alert<4>{track}} deterministic consequences by unit propagation
-    \begin{itemize}\only<-6>{\normalsize}
-    \item completion nogoods                                         \hfill $\Delta_P$
-    \item<2-5,7-> loop nogoods\only<5->{, determined and recorded \alert<5>{on demand}} \hfill $\Lambda_P$\kern 1pt
-    \item<3-> dynamic nogoods, derived from \alert<3>{conflicts}\only<5->{ and unfounded sets} \hfill $\nabla\phantom{_P}$
-    \end{itemize}
-    \only<7->{\smallskip}
-  \item<8-> When a nogood $\varepsilon$ in $\Delta_P\cup\nabla$ is \alert<7>{violated}
-    \begin{enumerate}\only<9-14>{\normalsize}
-    \item<9-> \alert<9-13>{analyze}
-      \uncover<10,19>{the conflict by resolution%
-        \only<-14>{\par} (until reaching a \only<-14>{Unique Implication Point; }UIP)}
-    \item<9-> \alert<9-13>{learn}
-      \uncover<11,19>{the derived conflict nogood~$\delta$}
-    \item<9-> \alert<9-13>{backjump}
-      \uncover<12,19>{to the earliest (non-deterministic) choice such that
-        \par the complement of the UIP is unit-resulting for $\delta$}
-    \item<9-> \alert<9-13>{assert}
-      \uncover<13,19>{the complement of the UIP and proceed%
-        \only<-14>{\par} (with unit propagation)}
-    \end{enumerate}
-    \only<15->{\smallskip}
+    \item<2-> Compute\only<4->{ and \alert<4>{track}} deterministic consequences by unit propagation
+      \begin{itemize}\only<-6>{\normalsize}
+        \item completion nogoods                                         \hfill $\Delta_P$
+        \item<2-5,7-> loop nogoods\only<5->{, determined and recorded \alert<5>{on demand}} \hfill $\Lambda_P$\kern 1pt
+        \item<3-> dynamic nogoods, derived from \alert<3>{conflicts}\only<5->{ and unfounded sets} \hfill $\nabla\phantom{_P}$
+      \end{itemize}
+      \only<7->{\smallskip}
+    \item<8-> When a nogood $\varepsilon$ in $\Delta_P\cup\nabla$ is \alert<7>{violated}
+      \begin{enumerate}\only<9-14>{\normalsize}
+        \item<9-> \alert<9-13>{analyze}
+          \uncover<10,19>{the conflict by resolution%
+            \only<-14>{\par} (until reaching a \only<-14>{Unique Implication Point; }UIP)}
+        \item<9-> \alert<9-13>{learn}
+          \uncover<11,19>{the derived conflict nogood~$\delta$}
+        \item<9-> \alert<9-13>{backjump}
+          \uncover<12,19>{to the earliest (non-deterministic) choice such that
+            \par the complement of the UIP is unit-resulting for $\delta$}
+        \item<9-> \alert<9-13>{assert}
+          \uncover<13,19>{the complement of the UIP and proceed%
+            \only<-14>{\par} (with unit propagation)}
+      \end{enumerate}
+      \only<15->{\smallskip}
     \item<16-> Terminate when either
-    \begin{itemize}\only<17-18>{\normalsize}
-    \item<17-> finding a stable model (a solution for $\Delta_P\cup\Lambda_P$)
-    \item<18-> deriving a conflict independently of (non-deterministic) choices
-    \end{itemize}
+      \begin{itemize}\only<17-18>{\normalsize}
+        \item<17-> finding a stable model (a solution for $\Delta_P\cup\Lambda_P$)
+        \item<18-> deriving a conflict independently of (non-deterministic) choices
+      \end{itemize}
   \end{itemize}
 \end{frame}
 % ----------------------------------------------------------------------
-\begin{frame}[shrink=20]%
-\input{solving/algorithms/algo-cdnl}
+\begin{frame}[shrink=35]%
+  \input{solving/algorithms/algo-cdnl}
 \end{frame}
 % ----------------------------------------------------------------------
 \begin{frame}{Observations}{decisions}
   \bigskip
   \begin{itemize}
-  \item For a non-deterministically chosen literal,
-    $\sigma_{\!d}=\Tsigned{a}$ or $\sigma_{\!d}=\Fsigned{a}$,
-    % respectively,
-    \par
-    we require $a\in(\atom{P}\cup\body{P})\setminus(\tlits{\ass}\cup\flits{\ass})$
-    \smallskip
-  \item Decision level~$\mathit{dl}$, initially set to~$0$, is used to count
-    \par
-    the number of non-deterministically chosen literals in assignment~\ass
-    \smallskip
-  \item For any literal $\sigma\in\ass$,
-    $\dlevel{\sigma}$ denotes the decision level of~$\sigma$,
-    \par
-    viz.\ the value $\mathit{dl}$ had when $\sigma$ was assigned
+    \item For a non-deterministically chosen literal,
+          $\sigma_{\!d}=\Tsigned{a}$ or $\sigma_{\!d}=\Fsigned{a}$,
+          % respectively,
+          \par
+          we require $a\in(\atom{P}\cup\body{P})\setminus(\tlits{\ass}\cup\flits{\ass})$
+          \smallskip
+    \item Decision level~$\mathit{dl}$, initially set to~$0$, is used to count
+          \par
+          the number of non-deterministically chosen literals in assignment~\ass
+          \smallskip
+    \item For any literal $\sigma\in\ass$,
+          $\dlevel{\sigma}$ denotes the decision level of~$\sigma$,
+          \par
+          viz.\ the value $\mathit{dl}$ had when $\sigma$ was assigned
   \end{itemize}
 \end{frame}
 % ----------------------------------------------------------------------
 \begin{frame}{Observations}{conflicts}
   \bigskip
   \begin{itemize}
-  \item A conflict is detected from violation of a nogood $\varepsilon$ from $\Delta_P\cup\nabla$,
-    \par
-    that is, whenever $\varepsilon\subseteq\ass$
-    \smallskip
-  \item A conflict at decision level~$0$%
-    \only<2>{\footnote{At level $0$, an assignment~\ass\ contains no non-deterministically chosen literals}}
-    indicates non-existence of stable models
-  \item[] it is also called top-level conflict
-    \bigskip
-  \item<4-> A nogood $\delta$ derived by conflict analysis is
-    \alert{asserting}, that is,
-    \par
-    some literal is unit-resulting for $\delta$ at a decision level $k<\mathit{dl}$
-    \begin{itemize}\normalsize
-    \item after learning~$\delta$ and backjumping to decision level~$k$,
+    \item A conflict is detected from violation of a nogood $\varepsilon$ from $\Delta_P\cup\nabla$,
+          \par
+          that is, whenever $\varepsilon\subseteq\ass$
+          \smallskip
+    \item A conflict at decision level~$0$%
+          \only<2>{\footnote{At level $0$, an assignment~\ass\ contains no non-deterministically chosen literals}}
+          indicates non-existence of stable models
+    \item[] it is also called top-level conflict
+      \bigskip
+    \item<4-> A nogood $\delta$ derived by conflict analysis is
+      \alert{asserting}, that is,
+      \par
+      some literal is unit-resulting for $\delta$ at a decision level $k<\mathit{dl}$
+      \begin{itemize}\normalsize
+        \item after learning~$\delta$ and backjumping to decision level~$k$,
 
-      at least one literal is newly derivable by unit propagation
-      \smallskip
-    \item no explicit flipping of non-deterministically chosen literals
-    \end{itemize}
+              at least one literal is newly derivable by unit propagation
+              \smallskip
+        \item no explicit flipping of non-deterministically chosen literals
+      \end{itemize}
   \end{itemize}
 \end{frame}
 % ----------------------------------------------------------------------
-\begin{frame}{Example}
+\begin{frame}[shrink=0]{Example}
   \[
     P
     =
     \left\{
-      \begin{array}{l}
-        x  \leftarrow  \neg y\\
-        y  \leftarrow  \neg x
-      \end{array}
-      \
-      \begin{array}{l}
-        u  \leftarrow x,y\\
-        u  \leftarrow v
-      \end{array}
-      \
-      \begin{array}{l}
-        v  \leftarrow x\\
-        v  \leftarrow u,y
-      \end{array}
-      \
-      \begin{array}{l}
-        w  \leftarrow \neg x,\neg y\\
-        \mbox{~}
-      \end{array}
+    \begin{array}{l}
+      x  \leftarrow  \neg y \\
+      y  \leftarrow  \neg x
+    \end{array}
+    \
+    \begin{array}{l}
+      u  \leftarrow x,y \\
+      u  \leftarrow v
+    \end{array}
+    \
+    \begin{array}{l}
+      v  \leftarrow x \\
+      v  \leftarrow u,y
+    \end{array}
+    \
+    \begin{array}{l}
+      w  \leftarrow \neg x,\neg y \\
+      \mbox{~}
+    \end{array}
     \right\}
   \]
   \medskip
   \[
     \begin{array}[b]{|c|cc|lcl|}
       \hline
-      \mathit{dl}     &\sigma_{\!d}                             &\overline{\sigma}              &\delta                                                         &                    &
+      \mathit{dl}     & \sigma_{\!d}                              & \overline{\sigma}               & \delta                                                          &                      &
       \\\hline\hline
-      \onslide<2->{1} &\onslide<2->{\Tsigned{u}}                &                               &                                                               &                    &
+      \onslide<2->{1} & \onslide<2->{\Tsigned{u}}                 &                                 &                                                                 &                      &
       \\\hline
-      \onslide<3->{2} &\onslide<3->{\Fsigned{\{\neg x,\neg y\}}}&                               &                                                               &                    &
+      \onslide<3->{2} & \onslide<3->{\Fsigned{\{\neg x,\neg y\}}} &                                 &                                                                 &                      &
       \\
-                      &                                         &\onslide<4->{\Fsigned{w}}      &\onslide<4->{\{\Tsigned{w},\Fsigned{\{\neg x,\neg y\}}\}}      &\onslide<4->{ =    }&\onslide<4->{\clno{w}}
+                      &                                           & \onslide<4->{\Fsigned{w}}       & \onslide<4->{\{\Tsigned{w},\Fsigned{\{\neg x,\neg y\}}\}}       & \onslide<4->{ =    } & \onslide<4->{\clno{w}}
       \\\hline
-      \onslide<5->{3} &\onslide<5->{\Fsigned{\{\neg y\}}}       &                               &                                                               &                    &
+      \onslide<5->{3} & \onslide<5->{\Fsigned{\{\neg y\}}}        &                                 &                                                                 &                      &
       \\
-                      &                                         &\onslide<6->{\Fsigned{x}}      &\onslide<6->{\{\Tsigned{x},\Fsigned{\{\neg y\}}\}}             &\onslide<6->{ =    }&\onslide<6->{\clno{x}}
+                      &                                           & \onslide<6->{\Fsigned{x}}       & \onslide<6->{\{\Tsigned{x},\Fsigned{\{\neg y\}}\}}              & \onslide<6->{ =    } & \onslide<6->{\clno{x}}
       \\
-                      &                                         &\onslide<6->{\Fsigned{\{x\}}}  &\onslide<6->{\{\Tsigned{\{x\}},\Fsigned{x}\}}                  &\onslide<6->{\in   }&\onslide<6->{\ClNo{\{x\}}}
+                      &                                           & \onslide<6->{\Fsigned{\{x\}}}   & \onslide<6->{\{\Tsigned{\{x\}},\Fsigned{x}\}}                   & \onslide<6->{\in   } & \onslide<6->{\ClNo{\{x\}}}
       \\
-                      &                                         &\onslide<6->{\Fsigned{\{x,y\}}}&\onslide<6->{\{\Tsigned{\{x,y\}},\Fsigned{x}\}}                &\onslide<6->{\in   }&\onslide<6->{\ClNo{\{x,y\}}}
+                      &                                           & \onslide<6->{\Fsigned{\{x,y\}}} & \onslide<6->{\{\Tsigned{\{x,y\}},\Fsigned{x}\}}                 & \onslide<6->{\in   } & \onslide<6->{\ClNo{\{x,y\}}}
       \\
-                      &                                         &\onslide<7->{\vdots}           &                                                               &\onslide<7->{\vdots}&
+                      &                                           & \onslide<7->{\vdots}            &                                                                 & \onslide<7->{\vdots} &
       \\
-                      &                                         &                               &\onslide<7->{\{\Tsigned{u},\Fsigned{\{x\}},\Fsigned{\{x,y\}}\}}&\onslide<7->{ =    }&\onslide<7->{\lambda(u,\{u,v\})}
+                      &                                           &                                 & \onslide<7->{\{\Tsigned{u},\Fsigned{\{x\}},\Fsigned{\{x,y\}}\}} & \onslide<7->{ =    } & \onslide<7->{\lambda(u,\{u,v\})}
       \\\hline
     \end{array}%
     ~\raisebox{1mm}{\onslide<7->{\KO}}
@@ -141,44 +141,44 @@
     P
     =
     \left\{
-      \begin{array}{l}
-        x  \leftarrow  \neg y\\
-        y  \leftarrow  \neg x
-      \end{array}
-      \
-      \begin{array}{l}
-        u  \leftarrow x,y\\
-        u  \leftarrow v
-      \end{array}
-      \
-      \begin{array}{l}
-        v  \leftarrow x\\
-        v  \leftarrow u,y
-      \end{array}
-      \
-      \begin{array}{l}
-        w  \leftarrow \neg x,\neg y\\
-        \mbox{~}
-      \end{array}
+    \begin{array}{l}
+      x  \leftarrow  \neg y \\
+      y  \leftarrow  \neg x
+    \end{array}
+    \
+    \begin{array}{l}
+      u  \leftarrow x,y \\
+      u  \leftarrow v
+    \end{array}
+    \
+    \begin{array}{l}
+      v  \leftarrow x \\
+      v  \leftarrow u,y
+    \end{array}
+    \
+    \begin{array}{l}
+      w  \leftarrow \neg x,\neg y \\
+      \mbox{~}
+    \end{array}
     \right\}
   \]
   \medskip
   \[
     \begin{array}[b]{|c|cc|lcl|}
       \hline
-      \mathit{dl} &\sigma_{\!d}                         &\overline{\sigma}                    &\delta                                                     &                    &
+      \mathit{dl} & \sigma_{\!d}                          & \overline{\sigma}                    & \delta                                                      &                      &
       \\\hline\hline
-      1           &\alert<4>{\Tsigned{u}}               &\phantom{\Fsigned{\{x,y\}}}          &\phantom{\{\Tsigned{u},\Fsigned{\{x\}},\Fsigned{\{x,y\}}\}}&                    &\phantom{\lambda(u,\{u,v\})}
+      1           & \alert<4>{\Tsigned{u}}                & \phantom{\Fsigned{\{x,y\}}}          & \phantom{\{\Tsigned{u},\Fsigned{\{x\}},\Fsigned{\{x,y\}}\}} &                      & \phantom{\lambda(u,\{u,v\})}
       \\
-                  &\phantom{\Fsigned{\{\neg x,\neg y\}}}&\onslide<2->{\alert<4>{\Tsigned{x}}} &             \{\Tsigned{u},\Fsigned{x}\}                   &             \in    &             \nabla
+                  & \phantom{\Fsigned{\{\neg x,\neg y\}}} & \onslide<2->{\alert<4>{\Tsigned{x}}} & \{\Tsigned{u},\Fsigned{x}\}                                 & \in                  & \nabla
       \\
-                  &                                     &\onslide<3->{\vdots}                 &                                                           &\onslide<3->{\vdots}&
+                  &                                       & \onslide<3->{\vdots}                 &                                                             & \onslide<3->{\vdots} &
       \\
-                  &                                     &\onslide<3->{\alert<4>{\Tsigned{v}}} &\onslide<3->{\{\Fsigned{v},\Tsigned{\{x\}}\}}              &\onslide<3->{\in   }&\onslide<3->{\ClNo{v}}
+                  &                                       & \onslide<3->{\alert<4>{\Tsigned{v}}} & \onslide<3->{\{\Fsigned{v},\Tsigned{\{x\}}\}}               & \onslide<3->{\in   } & \onslide<3->{\ClNo{v}}
       \\
-                  &                                     &\onslide<3->{\Fsigned{y}}            &\onslide<3->{\{\Tsigned{y},\Fsigned{\{\neg x\}}\}}         &\onslide<3->{ =    }&\onslide<3->{\clno{y}}
+                  &                                       & \onslide<3->{\Fsigned{y}}            & \onslide<3->{\{\Tsigned{y},\Fsigned{\{\neg x\}}\}}          & \onslide<3->{ =    } & \onslide<3->{\clno{y}}
       \\
-                  &                                     &\onslide<3->{\Fsigned{w}}            &\onslide<3->{\{\Tsigned{w},\Fsigned{\{\neg x,\neg y\}}\}}  &\onslide<3->{ =    }&\onslide<3->{\clno{w}}
+                  &                                       & \onslide<3->{\Fsigned{w}}            & \onslide<3->{\{\Tsigned{w},\Fsigned{\{\neg x,\neg y\}}\}}   & \onslide<3->{ =    } & \onslide<3->{\clno{w}}
       \\\hline
     \end{array}
     ~\raisebox{1mm}{\onslide<4->{\OK}}

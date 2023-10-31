@@ -1,126 +1,126 @@
 % ----------------------------------------------------------------------
 \begin{frame}{Outline of \ConflictAnalysis}
   \begin{itemize}
-  \item<2-> Conflict analysis is triggered whenever
-    some nogood $\delta\in\Delta_P\cup\nabla$
-    becomes violated, viz.\ $\delta\subseteq\ass$,
-    at a decision level~$\mathit{dl}>0$
-    \begin{itemize}\normalsize
-    \item<3-> all but the first literal assigned at $\mathit{dl}$
-      have been unit-resulting
-      \par
-      for nogoods $\varepsilon\in\Delta_P\cup\nabla$
-    \item<4-> if $\sigma\in\delta$ has been unit-resulting for~$\varepsilon$,
-      we obtain a new violated nogood
-      by resolving $\delta$ and $\varepsilon$ as follows
-      \[
-        (\delta\setminus\{\sigma\})\cup(\varepsilon\setminus\{\overline{\sigma}\})
-      \]
-    \end{itemize}
-  \item<5-> \structure{Example} \
-    \begin{enumerate}\normalsize
-    \item<6-> $\{\Tsigned{u},\Fsigned{\{x\}}^3,\Fsigned{\{x,y\}}^3\}$          \ is violated at decision level 3
-      \par\smallskip\pause[7]
-      \Fsigned{\{x,y\}} \ is unit-resulting for $\{\Tsigned{\{x,y\}},\Fsigned{x}^3\}$
-      \smallskip
-    \item<8-> $\{\Tsigned{u},\Fsigned{\{x\}}^3,\Fsigned{x}^3\}$       \pause[9]\ is violated at decision level 3
-      \par\smallskip\pause[10]
-      \Fsigned{\{x\}} \ is unit-resulting for $\{\Tsigned{\{x\}},\Fsigned{x}^3\}$
-      \smallskip
-    \item<11-> $\{\Tsigned{u},\Fsigned{x}^3\}$                                 \ is violated at decision level 3
-    \end{enumerate}
+    \item<2-> Conflict analysis is triggered whenever
+      some nogood $\delta\in\Delta_P\cup\nabla$
+      becomes violated, viz.\ $\delta\subseteq\ass$,
+      at a decision level~$\mathit{dl}>0$
+      \begin{itemize}
+        \item<3-> all but the first literal assigned at $\mathit{dl}$
+          have been unit-resulting
+          \par
+          for nogoods $\varepsilon\in\Delta_P\cup\nabla$
+        \item<4-> if $\sigma\in\delta$ has been unit-resulting for~$\varepsilon$,
+          we obtain a new violated nogood
+          by resolving $\delta$ and $\varepsilon$ as follows
+          \[
+            (\delta\setminus\{\sigma\})\cup(\varepsilon\setminus\{\overline{\sigma}\})
+          \]
+      \end{itemize}
+    \item<5-> \structure{Example} \
+      \begin{enumerate}
+        \item<6-> $\{\Tsigned{u},\Fsigned{\{x\}}^3,\Fsigned{\{x,y\}}^3\}$          \ is violated at decision level 3
+          \par\smallskip\pause[7]
+          \Fsigned{\{x,y\}} \ is unit-resulting for $\{\Tsigned{\{x,y\}},\Fsigned{x}^3\}$
+          \smallskip
+        \item<8-> $\{\Tsigned{u},\Fsigned{\{x\}}^3,\Fsigned{x}^3\}$       \pause[9]\ is violated at decision level 3
+          \par\smallskip\pause[10]
+          \Fsigned{\{x\}} \ is unit-resulting for $\{\Tsigned{\{x\}},\Fsigned{x}^3\}$
+          \smallskip
+        \item<11-> $\{\Tsigned{u},\Fsigned{x}^3\}$                                 \ is violated at decision level 3
+      \end{enumerate}
   \end{itemize}
 \end{frame}
 % ----------------------------------------------------------------------
 \begin{frame}{Outline of \ConflictAnalysis}
   \begin{itemize}
-  \item<2-> Resolution is directed by resolving first over the literal $\sigma\in\delta$
-    \par
-    derived last, viz.\ $(\delta\setminus\ass[\sigma])=\{\sigma\}$
-  \item <2->[]
-    That is, iterated resolution progresses in inverse order of assignment
-    \smallskip
-  \item<5-> Iterated resolution stops as soon as it generates
-    a nogood~$\delta$ containing exactly one literal~$\sigma$ assigned
-    at decision level~$\mathit{dl}$
-    \begin{itemize}\normalsize
-    \item $\sigma$ is called \alert{First Unique Implication Point} (First-UIP)
-    \item all literals in $(\delta\setminus\{\sigma\})$ are assigned
-      at decision levels\par smaller than~$\mathit{dl}$
-    \end{itemize}
-    \smallskip
-  \item<3-> \structure{Example} \
-    \begin{enumerate}\normalsize
-    \item $\{\Tsigned{u},\Fsigned{\{x\}}^3,\alert<4>{\Fsigned{\{x,y\}}}^3\}$
+    \item<2-> Resolution is directed by resolving first over the literal $\sigma\in\delta$
+      \par
+      derived last, viz.\ $(\delta\setminus\ass[\sigma])=\{\sigma\}$
+    \item <2->[]
+          That is, iterated resolution progresses in inverse order of assignment
+          \smallskip
+    \item<5-> Iterated resolution stops as soon as it generates
+      a nogood~$\delta$ containing exactly one literal~$\sigma$ assigned
+      at decision level~$\mathit{dl}$
+      \begin{itemize}\normalsize
+        \item $\sigma$ is called \alert{First Unique Implication Point} (First-UIP)
+        \item all literals in $(\delta\setminus\{\sigma\})$ are assigned
+              at decision levels\par smaller than~$\mathit{dl}$
+      \end{itemize}
       \smallskip
-    \item $\{\Tsigned{u},\alert<4>{\Fsigned{\{x\}}}^3,\Fsigned{x}^3\}$
-      \smallskip
-    \item $\{\Tsigned{u},\Fsigned{x}^3\}$ \quad\pause[6] ---\quad  $\Fsigned{x}^3$ is a First-UIP
-    \end{enumerate}
+    \item<3-> \structure{Example} \
+      \begin{enumerate}\normalsize
+        \item $\{\Tsigned{u},\Fsigned{\{x\}}^3,\alert<4>{\Fsigned{\{x,y\}}}^3\}$
+              \smallskip
+        \item $\{\Tsigned{u},\alert<4>{\Fsigned{\{x\}}}^3,\Fsigned{x}^3\}$
+              \smallskip
+        \item $\{\Tsigned{u},\Fsigned{x}^3\}$ \quad\pause[6] ---\quad  $\Fsigned{x}^3$ is a First-UIP
+      \end{enumerate}
   \end{itemize}
 \end{frame}
 % ----------------------------------------------------------------------
 \begin{frame}[c]
-\input{solving/algorithms/algo-conflict-analysis}
+  \input{solving/algorithms/algo-conflict-analysis}
 \end{frame}
 % ----------------------------------------------------------------------
-\begin{frame}{Example}
+\begin{frame}[shrink=0]{Example}
   \[
     P
     =
     \left\{
-      \begin{array}{l}
-        x  \leftarrow  \neg y\\
-        y  \leftarrow  \neg x
-      \end{array}
-      \
-      \begin{array}{l}
-        u  \leftarrow x,y\\
-        u  \leftarrow v
-      \end{array}
-      \
-      \begin{array}{l}
-        v  \leftarrow x\\
-        v  \leftarrow u,y
-      \end{array}
-      \
-      \begin{array}{l}
-        w  \leftarrow \neg x,\neg y\\
-        \mbox{~}
-      \end{array}
+    \begin{array}{l}
+      x  \leftarrow  \neg y \\
+      y  \leftarrow  \neg x
+    \end{array}
+    \
+    \begin{array}{l}
+      u  \leftarrow x,y \\
+      u  \leftarrow v
+    \end{array}
+    \
+    \begin{array}{l}
+      v  \leftarrow x \\
+      v  \leftarrow u,y
+    \end{array}
+    \
+    \begin{array}{l}
+      w  \leftarrow \neg x,\neg y \\
+      \mbox{~}
+    \end{array}
     \right\}
   \]
   \medskip\footnotesize
   \[
     \begin{array}{|c|cc|l|p{5pt}l}
       \cline{1-4}
-      \mathit{dl}&\sigma_{\!d}                              &\overline{\sigma}                   &\delta                                                                                            &          &
+      \mathit{dl} & \sigma_{\!d}                               & \overline{\sigma}                & \delta                                                                                            &            &
       \\\cline{1-4}\cline{1-4}
-      1          &\alert<2,5,8>{\Tsigned{u}                }&                                    &                                                                                                  &          &
+      1           & \alert<2,5,8>{\Tsigned{u}                } &                                  &                                                                                                   &            &
       \\\cline{1-4}
-      2          &              \Fsigned{\{\neg x,\neg y\}} &                                    &                                                                                                  &          &
+      2           & \Fsigned{\{\neg x,\neg y\}}                &                                  &                                                                                                   &            &
       \\
-                 &                                          &                \Fsigned{w}         &\{\Tsigned{w},\Fsigned{\{\neg x,\neg y\}}\}                                                       &          &
+                  &                                            & \Fsigned{w}                      & \{\Tsigned{w},\Fsigned{\{\neg x,\neg y\}}\}                                                       &            &
       \\\cline{1-4}
-      3          &              \Fsigned{\{\neg y\}}        &                                    &                                                                                                  &          &
+      3           & \Fsigned{\{\neg y\}}                       &                                  &                                                                                                   &            &
       \\
-                 &                                          &\alert<5-6,8-9>{\Fsigned{x}}        &\{\Tsigned{x},\Fsigned{\{\neg y\}}\}                                                              &          &
+                  &                                            & \alert<5-6,8-9>{\Fsigned{x}}     & \{\Tsigned{x},\Fsigned{\{\neg y\}}\}                                                              &            &
       \\
-                 &                                          &\alert<2-3,5-6>{\Fsigned{\{x\}}}    &\{\alert<7>{\Tsigned{\{x\}}},\alert<8>{\Fsigned{x}}\}                                             &          &\onslide<8->{\alert<8,10>{\{\Tsigned{u},\alert<9>{\Fsigned{x}}\}}}
+                  &                                            & \alert<2-3,5-6>{\Fsigned{\{x\}}} & \{\alert<7>{\Tsigned{\{x\}}},\alert<8>{\Fsigned{x}}\}                                             &            & \onslide<8->{\alert<8,10>{\{\Tsigned{u},\alert<9>{\Fsigned{x}}\}}}
       \\
-                 &                                          &    \alert<2-3>{\Fsigned{\{x,y\}}}  &\{\alert<4>{\Tsigned{\{x,y\}}},\alert<5>{\Fsigned{x}}\}                                           &          &\onslide<5->{\alert<5>{\{\alert<8>{\Tsigned{u}},\alert<6,8>{\Fsigned{x}},\alert<6-7>{\Fsigned{\{x\}}}\}}}
+                  &                                            & \alert<2-3>{\Fsigned{\{x,y\}}}   & \{\alert<4>{\Tsigned{\{x,y\}}},\alert<5>{\Fsigned{x}}\}                                           &            & \onslide<5->{\alert<5>{\{\alert<8>{\Tsigned{u}},\alert<6,8>{\Fsigned{x}},\alert<6-7>{\Fsigned{\{x\}}}\}}}
       \\
-                 &                                          &                \Tsigned{\{\neg x\}}&\{\Fsigned{\{\neg x\}},\Fsigned{x}\}                                                              &          &
+                  &                                            & \Tsigned{\{\neg x\}}             & \{\Fsigned{\{\neg x\}},\Fsigned{x}\}                                                              &            &
       \\
-                 &                                          &                \Tsigned{y}         &\{\Fsigned{\{\neg y\}},\Fsigned{y}\}                                                              &          &
+                  &                                            & \Tsigned{y}                      & \{\Fsigned{\{\neg y\}},\Fsigned{y}\}                                                              &            &
       \\
-                 &                                          &                \Tsigned{\{v\}}     &\{\Tsigned{u},\Fsigned{\{x,y\}},\Fsigned\{v\}\}                                                   &          &
+                  &                                            & \Tsigned{\{v\}}                  & \{\Tsigned{u},\Fsigned{\{x,y\}},\Fsigned\{v\}\}                                                   &            &
       \\
-                 &                                          &                \Tsigned{\{u,y\}}   &\{\Fsigned{\{u,y\}},\Tsigned{u},\Tsigned{y}\}                                                     &          &
+                  &                                            & \Tsigned{\{u,y\}}                & \{\Fsigned{\{u,y\}},\Tsigned{u},\Tsigned{y}\}                                                     &            &
       \\
-                 &                                          &                \Tsigned{v}         &\{\Fsigned{v},\Tsigned{\{u,y\}}\}                                                                 &          &
+                  &                                            & \Tsigned{v}                      & \{\Fsigned{v},\Tsigned{\{u,y\}}\}                                                                 &            &
       \\
-                 &                                          &                                    &\alert<2>{\{\alert<5>{\Tsigned{u}},\alert<3,5>{\Fsigned{\{x\}}},\alert<3-4>{\Fsigned{\{x,y\}}}\}} &\text{\KO}&
+                  &                                            &                                  & \alert<2>{\{\alert<5>{\Tsigned{u}},\alert<3,5>{\Fsigned{\{x\}}},\alert<3-4>{\Fsigned{\{x,y\}}}\}} & \text{\KO} &
       \\\cline{1-4}
     \end{array}
   \]
@@ -131,44 +131,44 @@
     P
     =
     \left\{
-      \begin{array}{l}
-        x  \leftarrow  \neg y\\
-        y  \leftarrow  \neg x
-      \end{array}
-      \
-      \begin{array}{l}
-        u  \leftarrow x,y\\
-        u  \leftarrow v
-      \end{array}
-      \
-      \begin{array}{l}
-        v  \leftarrow x\\
-        v  \leftarrow u,y
-      \end{array}
-      \
-      \begin{array}{l}
-        w  \leftarrow \neg x,\neg y\\
-        \mbox{~}
-      \end{array}
+    \begin{array}{l}
+      x  \leftarrow  \neg y \\
+      y  \leftarrow  \neg x
+    \end{array}
+    \
+    \begin{array}{l}
+      u  \leftarrow x,y \\
+      u  \leftarrow v
+    \end{array}
+    \
+    \begin{array}{l}
+      v  \leftarrow x \\
+      v  \leftarrow u,y
+    \end{array}
+    \
+    \begin{array}{l}
+      w  \leftarrow \neg x,\neg y \\
+      \mbox{~}
+    \end{array}
     \right\}
   \]
   \medskip\footnotesize
   \[
     \begin{array}{|c|cc|l|p{5pt}l}
       \cline{1-4}
-      \mathit{dl} &\sigma_{\!d}                         &\overline{\sigma}                    &\delta                                                     &                        &
+      \mathit{dl} & \sigma_{\!d}                          & \overline{\sigma}                    & \delta                                                      &                          &
       \\\cline{1-4}\cline{1-4}
-      1           &\alert<4>{\Tsigned{u}}               &\phantom{\Fsigned{\{x,y\}}}          &\phantom{\{\Tsigned{u},\Fsigned{\{x\}},\Fsigned{\{x,y\}}\}}&                        &\phantom{{\{{\Tsigned{u}},{\Fsigned{x}},{\Fsigned{\{x\}}}\}}}
+      1           & \alert<4>{\Tsigned{u}}                & \phantom{\Fsigned{\{x,y\}}}          & \phantom{\{\Tsigned{u},\Fsigned{\{x\}},\Fsigned{\{x,y\}}\}} &                          & \phantom{{\{{\Tsigned{u}},{\Fsigned{x}},{\Fsigned{\{x\}}}\}}}
       \\
-                  &\phantom{\Fsigned{\{\neg x,\neg y\}}}&\onslide<3->{\alert<4>{\Tsigned{x}}} &\onslide<2->{\{\Tsigned{u},\Fsigned{x}\}}                  &                        &
+                  & \phantom{\Fsigned{\{\neg x,\neg y\}}} & \onslide<3->{\alert<4>{\Tsigned{x}}} & \onslide<2->{\{\Tsigned{u},\Fsigned{x}\}}                   &                          &
       \\
-                  &                                     &\onslide<4->{\vdots}                 &                                                           &                        &
+                  &                                       & \onslide<4->{\vdots}                 &                                                             &                          &
       \\
-                  &                                     &\onslide<4->{\alert<4>{\Tsigned{v}}} &\onslide<4->{\{\Fsigned{v},\Tsigned{\{x\}}\}}              &                        &
+                  &                                       & \onslide<4->{\alert<4>{\Tsigned{v}}} & \onslide<4->{\{\Fsigned{v},\Tsigned{\{x\}}\}}               &                          &
       \\
-                  &                                     &\onslide<4->{\Fsigned{y}}            &\onslide<4->{\{\Tsigned{y},\Fsigned{\{\neg x\}}\}}         &    \phantom{\text{\KO}}&
+                  &                                       & \onslide<4->{\Fsigned{y}}            & \onslide<4->{\{\Tsigned{y},\Fsigned{\{\neg x\}}\}}          & \phantom{\text{\KO}}     &
       \\
-                  &                                     &\onslide<4->{\Fsigned{w}}            &\onslide<4->{\{\Tsigned{w},\Fsigned{\{\neg x,\neg y\}}\}}  &\onslide<4->{\text{\OK}}&
+                  &                                       & \onslide<4->{\Fsigned{w}}            & \onslide<4->{\{\Tsigned{w},\Fsigned{\{\neg x,\neg y\}}\}}   & \onslide<4->{\text{\OK}} &
       \\\cline{1-4}
     \end{array}
   \]
@@ -177,30 +177,30 @@
 \begin{frame}{Observations}
   \bigskip
   \begin{itemize}
-  \item<2->
-    There always is a First-UIP at which conflict analysis terminates
-    \begin{itemize}\normalsize
-    \item
-      in the worst case, resolution stops at the
-      non-deterministically chosen literal assigned at decision level~$\mathit{dl}$
-    \end{itemize}
-    \smallskip
-  \item<3->
-    The nogood~$\delta$ containing First-UIP~$\sigma$ is violated by~\ass,
-    viz.\ $\delta\subseteq\ass$,
-  \item<3->[] and $k=\mathit{max}(\{\mathit{dl}(\sigmaAUX)\mid\sigmaAUX\in\delta\setminus\{\sigma\}\}\cup\{0\})$ and $k<\mathit{dl}$
-    \begin{itemize}\normalsize
-    \item
-      after recording $\delta$ in $\nabla$ and backjumping to decision level~$k$,\\
-      $\overline{\sigma}$ is unit-resulting for $\delta$
-    \item
-      such a nogood $\delta$ is called \alert{asserting}
-    \end{itemize}
-    \smallskip
-  \item<4-> Asserting nogoods direct conflict-driven search into a different region of the search space than traversed before
-    \begin{itemize}\normalsize
-    \item without explicitly flipping any non-deterministically chosen literal
-    \end{itemize}
+    \item<2->
+      There always is a First-UIP at which conflict analysis terminates
+      \begin{itemize}\normalsize
+        \item
+              in the worst case, resolution stops at the
+              non-deterministically chosen literal assigned at decision level~$\mathit{dl}$
+      \end{itemize}
+      \smallskip
+    \item<3->
+      The nogood~$\delta$ containing First-UIP~$\sigma$ is violated by~\ass,
+      viz.\ $\delta\subseteq\ass$,
+      \item<3->[] and $k=\mathit{max}(\{\mathit{dl}(\sigmaAUX)\mid\sigmaAUX\in\delta\setminus\{\sigma\}\}\cup\{0\})$ and $k<\mathit{dl}$
+      \begin{itemize}\normalsize
+        \item
+              after recording $\delta$ in $\nabla$ and backjumping to decision level~$k$,\\
+              $\overline{\sigma}$ is unit-resulting for $\delta$
+        \item
+              such a nogood $\delta$ is called \alert{asserting}
+      \end{itemize}
+      \smallskip
+    \item<4-> Asserting nogoods direct conflict-driven search into a different region of the search space than traversed before
+      \begin{itemize}\normalsize
+        \item without explicitly flipping any non-deterministically chosen literal
+      \end{itemize}
   \end{itemize}
 \end{frame}
 % ----------------------------------------------------------------------
